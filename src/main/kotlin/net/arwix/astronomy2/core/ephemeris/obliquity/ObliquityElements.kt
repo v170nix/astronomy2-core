@@ -6,11 +6,11 @@ import net.arwix.astronomy2.core.Radian
 import net.arwix.astronomy2.core.vector.Matrix
 import net.arwix.astronomy2.core.vector.Vector
 
-interface ObliquityTransformationElements {
+interface ObliquityElements {
 
-    val id: Int
+    val id: ObliquityId
     val t: Double
-    val meanEps: Radian
+    val obliquity: Obliquity
     val eclipticToEquatorialMatrix: Matrix
     val equatorialToEclipticMatrix: Matrix
 

@@ -3,12 +3,16 @@ package net.arwix.astronomy2.core.ephemeris.obliquity
 import net.arwix.astronomy2.core.*
 import net.arwix.astronomy2.core.math.polynomialSum
 import net.arwix.astronomy2.core.vector.Matrix
+import net.arwix.astronomy2.core.vector.Matrix.Companion.AXIS_X
 import net.arwix.astronomy2.core.vector.Vector
 import kotlin.lazy
 import kotlin.math.cos
 import kotlin.math.sin
 
-fun getObliquityMeanEps(id: Int, t: Double) = when (id) {
+typealias Obliquity = Radian
+typealias ObliquityId = Int
+
+fun getObliquity(id: ObliquityId, t: Double): Obliquity = when (id) {
     ID_OBLIQUITY_WILLIAMS_1994 -> getEps(t, rvalStart_WIL, coeffs_WIL)
     ID_OBLIQUITY_SIMON_1994 -> getEps(t, rvalStart_SIM, coeffs_SIM)
     ID_OBLIQUITY_LASKAR_1996 -> getEps(t, rvalStart_LAS, coeffs_LAS)
@@ -25,13 +29,13 @@ fun getObliquityMeanEps(id: Int, t: Double) = when (id) {
 }
 
 // ecliptic to equatorial
-fun getObliquityMatrix(id: Int, t: Double): Matrix = Matrix.getRotateX(-getObliquityMeanEps(id, t))
+fun getObliquityMatrix(id: ObliquityId, t: Double): Matrix = Matrix.getRotateX(-getObliquity(id, t))
 
-fun createObliquityElements(id: Int, t: Double): ObliquityTransformationElements = object : ObliquityTransformationElements {
-    override val id: Int = id
+fun createObliquityElements(id: ObliquityId, t: Double): ObliquityElements = object : ObliquityElements {
+    override val id = id
     override val t: Double = t
-    override val meanEps = getObliquityMeanEps(id, t)
-    override val eclipticToEquatorialMatrix = Matrix.getRotateX(-getObliquityMeanEps(id, t))
+    override val obliquity = getObliquity(id, t)
+    override val eclipticToEquatorialMatrix = Matrix(AXIS_X, -getObliquity(id, t))
     override val equatorialToEclipticMatrix = eclipticToEquatorialMatrix.transpose()
 
     override fun rotateEclipticVector(vector: Vector): Vector {
@@ -49,12 +53,12 @@ private fun getEps(t: Double, rvalStart: Double, coeffs: DoubleArray): Radian {
 }
 
 // Williams et al., DE403 Ephemeris
-const val ID_OBLIQUITY_WILLIAMS_1994 = 1
+const val ID_OBLIQUITY_WILLIAMS_1994: ObliquityId = 1
 private val rvalStart_WIL by lazy { 23.0 * SECONDS_PER_DEGREE + 26.0 * MINUTES_PER_DEGREE + 21.406173 }
 private val coeffs_WIL by lazy { doubleArrayOf(0.0, -4683.396, -1.75, 1998.9, -51.38, -249.67, -39.05, 7.12, 27.87, 5.79, 2.45) }
 
 // Simon et al., 1994
-const val ID_OBLIQUITY_SIMON_1994 = 2
+const val ID_OBLIQUITY_SIMON_1994: ObliquityId = 2
 private val rvalStart_SIM by lazy { 23.0 * SECONDS_PER_DEGREE + 26.0 * MINUTES_PER_DEGREE + 21.412 }
 private val coeffs_SIM by lazy { doubleArrayOf(0.0, -4680.927, -1.52, 1998.9, -51.38, -249.67, -39.05, 7.12, 27.87, 5.79, 2.45) }
 
@@ -66,21 +70,21 @@ private val coeffs_SIM by lazy { doubleArrayOf(0.0, -4680.927, -1.52, 1998.9, -5
  * span of 6000 years. Laskar estimates the precision to be 0.01" after
  * 1000 years and a few seconds of arc after 10000 years.
  */
-const val ID_OBLIQUITY_LASKAR_1996 = 3
+const val ID_OBLIQUITY_LASKAR_1996: ObliquityId = 3
 private val rvalStart_LAS by lazy { 23.0 * SECONDS_PER_DEGREE + 26.0 * MINUTES_PER_DEGREE + 21.448 }
 private val coeffs_LAS by lazy { doubleArrayOf(0.0, -4680.93, -1.55, 1999.25, -51.38, -249.67, -39.05, 7.12, 27.87, 5.79, 2.45) }
 
 // IAU 1976
-const val ID_OBLIQUITY_IAU_1976 = 4
+const val ID_OBLIQUITY_IAU_1976: ObliquityId = 4
 private val rvalStart_IAU by lazy { 23.0 * SECONDS_PER_DEGREE + 26.0 * MINUTES_PER_DEGREE + 21.448 }
 private val coeffs_IAU by lazy { doubleArrayOf(0.0, -4681.5, -5.9, 1813.0) }
 
 // Capitaine et al. 2003, Hilton et al. 2006
-const val ID_OBLIQUITY_IAU_2006 = 5
+const val ID_OBLIQUITY_IAU_2006: ObliquityId = 5
 private val rvalStart_CAP by lazy { 23.0 * SECONDS_PER_DEGREE + 26.0 * MINUTES_PER_DEGREE + 21.406 }
 private val coeffs_CAP by lazy { doubleArrayOf(0.0, -4683.6769, -1.831, 2003.400, -57.6, -434.0) }
 
-const val ID_OBLIQUITY_VONDRAK_2011 = 6
+const val ID_OBLIQUITY_VONDRAK_2011: ObliquityId = 6
 private val xypol by lazy { doubleArrayOf(84028.206305, 0.3624445, -0.00004039, -110E-9) }
 private val xyper by lazy {
     arrayOf(

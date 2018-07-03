@@ -13,15 +13,11 @@ import java.util.stream.Stream
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class ObliquityTest {
 
-
-
-//    private val t = (0.0, 0.5, -0.5)
-
     @ParameterizedTest
     @MethodSource("getWilliamsData")
     fun `williams 1994`(data: Data) {
         assertEquals(
-                radToDegString(getObliquityMeanEps(ID_OBLIQUITY_WILLIAMS_1994, data.jT)),
+                radToDegString(getObliquity(ID_OBLIQUITY_WILLIAMS_1994, data.jT)),
                 radToDegString(data.obliquity))
     }
 
@@ -29,7 +25,7 @@ internal class ObliquityTest {
     @MethodSource("getSimonData")
     fun `simon 1994`(data: Data) {
         assertEquals(
-                radToDegString(getObliquityMeanEps(ID_OBLIQUITY_SIMON_1994, data.jT)),
+                radToDegString(getObliquity(ID_OBLIQUITY_SIMON_1994, data.jT)),
                 radToDegString(data.obliquity))
     }
 
@@ -37,7 +33,7 @@ internal class ObliquityTest {
     @MethodSource("getLaskarData")
     fun `laskar 1996`(data: Data) {
         assertEquals(
-                radToDegString(getObliquityMeanEps(ID_OBLIQUITY_LASKAR_1996, data.jT)),
+                radToDegString(getObliquity(ID_OBLIQUITY_LASKAR_1996, data.jT)),
                 radToDegString(data.obliquity))
     }
 
@@ -45,7 +41,7 @@ internal class ObliquityTest {
     @MethodSource("getIAU1976Data")
     fun `IAU 1976`(data: Data) {
         assertEquals(
-                radToDegString(getObliquityMeanEps(ID_OBLIQUITY_IAU_1976, data.jT)),
+                radToDegString(getObliquity(ID_OBLIQUITY_IAU_1976, data.jT)),
                 radToDegString(data.obliquity))
     }
 
@@ -53,7 +49,7 @@ internal class ObliquityTest {
     @MethodSource("getIAU2006Data")
     fun `IAU 2006`(data: Data) {
         assertEquals(
-                radToDegString(getObliquityMeanEps(ID_OBLIQUITY_IAU_2006, data.jT)),
+                radToDegString(getObliquity(ID_OBLIQUITY_IAU_2006, data.jT)),
                 radToDegString(data.obliquity))
     }
 
@@ -61,7 +57,7 @@ internal class ObliquityTest {
     @MethodSource("getVONDRAK2011Data")
     fun `VONDRAK 2011`(data: Data) {
         assertEquals(
-                radToDegString(getObliquityMeanEps(ID_OBLIQUITY_VONDRAK_2011, data.jT)),
+                radToDegString(getObliquity(ID_OBLIQUITY_VONDRAK_2011, data.jT)),
                 radToDegString(data.obliquity))
     }
 
@@ -113,10 +109,7 @@ internal class ObliquityTest {
         }
     }
 
-    private companion object {
-
-        const val delta = 1.0/60.0/60.0/60.0/10.0
-
+    internal companion object {
         fun radToDegString(radian: Radian): String {
             val g = (RAD_TO_DEG * radian).toInt()
             val mm = (RAD_TO_DEG * radian - g) * 60.0

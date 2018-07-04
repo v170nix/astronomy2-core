@@ -2,32 +2,29 @@ package net.arwix.astronomy2.core.ephemeris.nutation
 
 import net.arwix.astronomy2.core.Ecliptic
 import net.arwix.astronomy2.core.Equatorial
-import net.arwix.astronomy2.core.Geocentric
 import net.arwix.astronomy2.core.JT
 import net.arwix.astronomy2.core.ephemeris.obliquity.Obliquity
-import net.arwix.astronomy2.core.ephemeris.obliquity.ObliquityElements
-import net.arwix.astronomy2.core.ephemeris.obliquity.getObliquity
 import net.arwix.astronomy2.core.vector.Matrix
 import net.arwix.astronomy2.core.vector.Matrix.Companion.AXIS_X
 import net.arwix.astronomy2.core.vector.Matrix.Companion.AXIS_Z
 import net.arwix.astronomy2.core.vector.Vector
 
-typealias NutationId = Int
+typealias IdNutation = Int
 
-fun getNutationAngles(id: NutationId, t: JT): NutationAngles {
+fun getNutationAngles(id: IdNutation, t: JT): NutationAngles {
     return when (id) {
-        ID_NUTATION_IAU1980 -> calcNutation_IAU1980(t)
-        ID_NUTATION_IAU2000 -> calcNutation_IAU2000(t)
-        ID_NUTATION_IAU2006 -> calcNutation_IAU2000(t).let {
+        ID_IAU_1980_NUTATION -> calcNutation_IAU1980(t)
+        ID_IAU_2000_NUTATION -> calcNutation_IAU2000(t)
+        ID_IAU_2006_NUTATION -> calcNutation_IAU2000(t).let {
             NutationAngles(it.deltaLongitude * (1.0 + (0.4697E-6 - 2.7774E-6 * t)), it.deltaObliquity * (1.0 + (2.7774E-6 * t)))
         }
         else -> throw IndexOutOfBoundsException()
     }
 }
 
-const val ID_NUTATION_IAU1980: NutationId = 2
-const val ID_NUTATION_IAU2000: NutationId = 3
-const val ID_NUTATION_IAU2006: NutationId = 4
+const val ID_IAU_1980_NUTATION: IdNutation = 2
+const val ID_IAU_2000_NUTATION: IdNutation = 3
+const val ID_IAU_2006_NUTATION: IdNutation = 4
 
 @Ecliptic
 fun createEclipticNutationMatrix(angles: NutationAngles): Matrix {
@@ -41,7 +38,7 @@ fun createEquatorialNutationMatrix(angles: NutationAngles, obliquity: Obliquity)
             Matrix(AXIS_X, obliquity)
 }
 
-fun createObliquityElements(id: NutationId, t: JT, obliquity: Obliquity? = null): NutationElements = object : NutationElements {
+fun createObliquityElements(id: IdNutation, t: JT, obliquity: Obliquity? = null): NutationElements = object : NutationElements {
     override val id = id
     override val t: JT = t
     override val angles = getNutationAngles(id, t)

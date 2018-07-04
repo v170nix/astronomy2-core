@@ -8,7 +8,7 @@ import net.arwix.astronomy2.core.vector.Vector
 
 interface NutationElements {
 
-    val id: NutationId
+    val id: IdNutation
     val t: JT
     val angles: NutationAngles
     @Ecliptic val eclipticMatrix: Matrix

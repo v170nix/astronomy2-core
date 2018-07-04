@@ -16,7 +16,7 @@ internal class NutationTest {
     @ParameterizedTest
     @MethodSource("getIAU1980Data")
     fun `IAU1980`(data: Data) {
-        val angles = getNutationAngles(ID_NUTATION_IAU1980, data.jT)
+        val angles = getNutationAngles(ID_NUTATION_IAU_1980, data.jT)
         assertEquals(radToDegString(data.nutationAngles.deltaLongitude),
                 radToDegString(angles.deltaLongitude))
         assertEquals(radToDegString(data.nutationAngles.deltaObliquity),
@@ -26,7 +26,7 @@ internal class NutationTest {
     @ParameterizedTest
     @MethodSource("getIAU2000Data")
     fun `IAU2000`(data: Data) {
-        val angles = getNutationAngles(ID_NUTATION_IAU2000, data.jT)
+        val angles = getNutationAngles(ID_NUTATION_IAU_2000, data.jT)
         assertEquals(radToDegString(data.nutationAngles.deltaLongitude),
                 radToDegString(angles.deltaLongitude))
         assertEquals(radToDegString(data.nutationAngles.deltaObliquity),
@@ -36,7 +36,7 @@ internal class NutationTest {
     @ParameterizedTest
     @MethodSource("getIAU2006Data")
     fun `IAU2006`(data: Data) {
-        val angles = getNutationAngles(ID_NUTATION_IAU2006, data.jT)
+        val angles = getNutationAngles(ID_NUTATION_IAU_2006, data.jT)
         assertEquals(radToDegString(data.nutationAngles.deltaLongitude),
                 radToDegString(angles.deltaLongitude))
         assertEquals(radToDegString(data.nutationAngles.deltaObliquity),

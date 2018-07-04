@@ -13,12 +13,12 @@ typealias Obliquity = Radian
 typealias IdObliquity = Int
 
 fun getObliquity(idObliquity: IdObliquity, t: JT): Obliquity = when (idObliquity) {
-    ID_WILLIAMS_1994_OBLIQUITY -> getEps(t, rvalStart_WIL, coeffs_WIL)
-    ID_SIMON_1994_OBLIQUITY -> getEps(t, rvalStart_SIM, coeffs_SIM)
-    ID_LASKAR_1996_OBLIQUITY -> getEps(t, rvalStart_LAS, coeffs_LAS)
-    ID_IAU_1976_OBLIQUITY -> getEps(t, rvalStart_IAU, coeffs_IAU)
-    ID_IAU_2006_OBLIQUITY -> getEps(t, rvalStart_CAP, coeffs_CAP)
-    ID_VONDRAK_2011_OBLIQUITY -> (PI2 * t).let { w ->
+    ID_OBLIQUITY_WILLIAMS_1994 -> getEps(t, rvalStart_WIL, coeffs_WIL)
+    ID_OBLIQUITY_SIMON_1994 -> getEps(t, rvalStart_SIM, coeffs_SIM)
+    ID_OBLIQUITY_LASKAR_1996 -> getEps(t, rvalStart_LAS, coeffs_LAS)
+    ID_OBLIQUITY_IAU_1976 -> getEps(t, rvalStart_IAU, coeffs_IAU)
+    ID_OBLIQUITY_IAU_2006 -> getEps(t, rvalStart_CAP, coeffs_CAP)
+    ID_OBLIQUITY_VONDRAK_2011 -> (PI2 * t).let { w ->
         xyper.sumByDouble { doubles: DoubleArray ->
             (w / doubles[0]).let { a ->
                 cos(a) * doubles[1] + sin(a) * doubles[2]
@@ -53,12 +53,12 @@ private fun getEps(t: Double, rvalStart: Double, coeffs: DoubleArray): Radian {
 }
 
 // Williams et al., DE403 Ephemeris
-const val ID_WILLIAMS_1994_OBLIQUITY: IdObliquity = 1
+const val ID_OBLIQUITY_WILLIAMS_1994: IdObliquity = 1
 private val rvalStart_WIL by lazy { 23.0 * SECONDS_PER_DEGREE + 26.0 * MINUTES_PER_DEGREE + 21.406173 }
 private val coeffs_WIL by lazy { doubleArrayOf(0.0, -4683.396, -1.75, 1998.9, -51.38, -249.67, -39.05, 7.12, 27.87, 5.79, 2.45) }
 
 // Simon et al., 1994
-const val ID_SIMON_1994_OBLIQUITY: IdObliquity = 2
+const val ID_OBLIQUITY_SIMON_1994: IdObliquity = 2
 private val rvalStart_SIM by lazy { 23.0 * SECONDS_PER_DEGREE + 26.0 * MINUTES_PER_DEGREE + 21.412 }
 private val coeffs_SIM by lazy { doubleArrayOf(0.0, -4680.927, -1.52, 1998.9, -51.38, -249.67, -39.05, 7.12, 27.87, 5.79, 2.45) }
 
@@ -70,21 +70,21 @@ private val coeffs_SIM by lazy { doubleArrayOf(0.0, -4680.927, -1.52, 1998.9, -5
  * span of 6000 years. Laskar estimates the precision to be 0.01" after
  * 1000 years and a few seconds of arc after 10000 years.
  */
-const val ID_LASKAR_1996_OBLIQUITY: IdObliquity = 3
+const val ID_OBLIQUITY_LASKAR_1996: IdObliquity = 3
 private val rvalStart_LAS by lazy { 23.0 * SECONDS_PER_DEGREE + 26.0 * MINUTES_PER_DEGREE + 21.448 }
 private val coeffs_LAS by lazy { doubleArrayOf(0.0, -4680.93, -1.55, 1999.25, -51.38, -249.67, -39.05, 7.12, 27.87, 5.79, 2.45) }
 
 // IAU 1976
-const val ID_IAU_1976_OBLIQUITY: IdObliquity = 4
+const val ID_OBLIQUITY_IAU_1976: IdObliquity = 4
 private val rvalStart_IAU by lazy { 23.0 * SECONDS_PER_DEGREE + 26.0 * MINUTES_PER_DEGREE + 21.448 }
 private val coeffs_IAU by lazy { doubleArrayOf(0.0, -4681.5, -5.9, 1813.0) }
 
 // Capitaine et al. 2003, Hilton et al. 2006
-const val ID_IAU_2006_OBLIQUITY: IdObliquity = 5
+const val ID_OBLIQUITY_IAU_2006: IdObliquity = 5
 private val rvalStart_CAP by lazy { 23.0 * SECONDS_PER_DEGREE + 26.0 * MINUTES_PER_DEGREE + 21.406 }
 private val coeffs_CAP by lazy { doubleArrayOf(0.0, -4683.6769, -1.831, 2003.400, -57.6, -434.0) }
 
-const val ID_VONDRAK_2011_OBLIQUITY: IdObliquity = 6
+const val ID_OBLIQUITY_VONDRAK_2011: IdObliquity = 6
 private val xypol by lazy { doubleArrayOf(84028.206305, 0.3624445, -0.00004039, -110E-9) }
 private val xyper by lazy {
     arrayOf(

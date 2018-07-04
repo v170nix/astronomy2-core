@@ -13,18 +13,18 @@ typealias IdNutation = Int
 
 fun getNutationAngles(id: IdNutation, t: JT): NutationAngles {
     return when (id) {
-        ID_IAU_1980_NUTATION -> calcNutation_IAU1980(t)
-        ID_IAU_2000_NUTATION -> calcNutation_IAU2000(t)
-        ID_IAU_2006_NUTATION -> calcNutation_IAU2000(t).let {
+        ID_NUTATION_IAU_1980 -> calcNutation_IAU1980(t)
+        ID_NUTATION_IAU_2000 -> calcNutation_IAU2000(t)
+        ID_NUTATION_IAU_2006 -> calcNutation_IAU2000(t).let {
             NutationAngles(it.deltaLongitude * (1.0 + (0.4697E-6 - 2.7774E-6 * t)), it.deltaObliquity * (1.0 + (2.7774E-6 * t)))
         }
         else -> throw IndexOutOfBoundsException()
     }
 }
 
-const val ID_IAU_1980_NUTATION: IdNutation = 2
-const val ID_IAU_2000_NUTATION: IdNutation = 3
-const val ID_IAU_2006_NUTATION: IdNutation = 4
+const val ID_NUTATION_IAU_1980: IdNutation = 2
+const val ID_NUTATION_IAU_2000: IdNutation = 3
+const val ID_NUTATION_IAU_2006: IdNutation = 4
 
 @Ecliptic
 fun createEclipticNutationMatrix(angles: NutationAngles): Matrix {

@@ -12,7 +12,7 @@ import kotlin.math.sin
 typealias Obliquity = Radian
 typealias ObliquityId = Int
 
-fun getObliquity(id: ObliquityId, t: Double): Obliquity = when (id) {
+fun getObliquity(id: ObliquityId, t: JT): Obliquity = when (id) {
     ID_OBLIQUITY_WILLIAMS_1994 -> getEps(t, rvalStart_WIL, coeffs_WIL)
     ID_OBLIQUITY_SIMON_1994 -> getEps(t, rvalStart_SIM, coeffs_SIM)
     ID_OBLIQUITY_LASKAR_1996 -> getEps(t, rvalStart_LAS, coeffs_LAS)
@@ -29,11 +29,11 @@ fun getObliquity(id: ObliquityId, t: Double): Obliquity = when (id) {
 }
 
 // ecliptic to equatorial
-fun getObliquityMatrix(id: ObliquityId, t: Double): Matrix = Matrix.getRotateX(-getObliquity(id, t))
+fun getObliquityMatrix(id: ObliquityId, t: JT): Matrix = Matrix.getRotateX(-getObliquity(id, t))
 
-fun createObliquityElements(id: ObliquityId, t: Double): ObliquityElements = object : ObliquityElements {
+fun createObliquityElements(id: ObliquityId, t: JT): ObliquityElements = object : ObliquityElements {
     override val id = id
-    override val t: Double = t
+    override val t: JT = t
     override val obliquity = getObliquity(id, t)
     override val eclipticToEquatorialMatrix = Matrix(AXIS_X, -getObliquity(id, t))
     override val equatorialToEclipticMatrix = eclipticToEquatorialMatrix.transpose()

@@ -2,13 +2,14 @@ package net.arwix.astronomy2.core.ephemeris.nutation
 
 import net.arwix.astronomy2.core.Ecliptic
 import net.arwix.astronomy2.core.Equatorial
+import net.arwix.astronomy2.core.JT
 import net.arwix.astronomy2.core.vector.Matrix
 import net.arwix.astronomy2.core.vector.Vector
 
 interface NutationElements {
 
     val id: NutationId
-    val t: Double
+    val t: JT
     val angles: NutationAngles
     @Ecliptic val eclipticMatrix: Matrix
     @Equatorial val equatorialMatrix: Matrix?

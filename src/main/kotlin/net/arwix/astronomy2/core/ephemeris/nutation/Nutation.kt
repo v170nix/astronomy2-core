@@ -3,6 +3,7 @@ package net.arwix.astronomy2.core.ephemeris.nutation
 import net.arwix.astronomy2.core.Ecliptic
 import net.arwix.astronomy2.core.Equatorial
 import net.arwix.astronomy2.core.Geocentric
+import net.arwix.astronomy2.core.JT
 import net.arwix.astronomy2.core.ephemeris.obliquity.Obliquity
 import net.arwix.astronomy2.core.ephemeris.obliquity.ObliquityElements
 import net.arwix.astronomy2.core.ephemeris.obliquity.getObliquity
@@ -13,7 +14,7 @@ import net.arwix.astronomy2.core.vector.Vector
 
 typealias NutationId = Int
 
-fun getNutationAngles(id: NutationId, t: Double): NutationAngles {
+fun getNutationAngles(id: NutationId, t: JT): NutationAngles {
     return when (id) {
         ID_NUTATION_IAU1980 -> calcNutation_IAU1980(t)
         ID_NUTATION_IAU2000 -> calcNutation_IAU2000(t)
@@ -40,9 +41,9 @@ fun createEquatorialNutationMatrix(angles: NutationAngles, obliquity: Obliquity)
             Matrix(AXIS_X, obliquity)
 }
 
-fun createObliquityElements(id: NutationId, t: Double, obliquity: Obliquity? = null): NutationElements = object : NutationElements {
+fun createObliquityElements(id: NutationId, t: JT, obliquity: Obliquity? = null): NutationElements = object : NutationElements {
     override val id = id
-    override val t: Double = t
+    override val t: JT = t
     override val angles = getNutationAngles(id, t)
     override val eclipticMatrix = createEclipticNutationMatrix(angles)
     override val equatorialMatrix = obliquity?.let { createEquatorialNutationMatrix(angles, it) }

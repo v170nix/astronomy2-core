@@ -136,4 +136,5 @@ freeline.py
 freeline/
 freeline_project_description.json
 /gradle.properties
+gradle.properties
 gradle/wrapper

@@ -53,17 +53,15 @@ class SphericalVector(@JvmField var phi: Radian, @JvmField var theta: Radian, @J
     }
 
     override fun plus(vector: Vector) = convert<RectangularVector>(this) + vector
-
     override fun minus(vector: Vector) = convert<RectangularVector>(this) - vector
-
     override fun times(scalar: Double) = convert<RectangularVector>(this) * scalar
-
     override fun times(vector: Vector) = convert<RectangularVector>(this) * vector
-
     override fun times(right: Matrix) = convert<RectangularVector>(this) * right
-
     override fun div(scalar: Double) = convert<RectangularVector>(this) / scalar
-
     override fun dot(vector: Vector) = convert<RectangularVector>(this) dot vector
+
+    override fun component1(): Double = phi
+    override fun component2(): Double = theta
+    override fun component3(): Double = r
 
 }

@@ -76,5 +76,4 @@ data class RectangularVector(@JvmField var x: Double,
         val rightVector: RectangularVector = convert(vector)
         return x * rightVector.x + y * rightVector.y + z * rightVector.z
     }
-
 }

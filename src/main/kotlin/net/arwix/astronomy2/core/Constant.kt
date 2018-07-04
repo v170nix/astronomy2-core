@@ -54,7 +54,7 @@ const val JD_2000 = 2451545.0
 const val TROPICAL_YEAR = 365.242198781
 
 
-const val SECS_DAY = 86400.0 // колличество секунд в сутках
+const val SECS_IN_DAY = 86400.0 // колличество секунд в сутках
 
 /** Earth orbit mean rate in rad/day (Gauss Gravitational constant). kGauss */
 const val EARTH_MEAN_ORBIT_RATE = 0.01720209895  // гравитационная константа

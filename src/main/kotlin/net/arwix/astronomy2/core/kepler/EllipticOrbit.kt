@@ -45,7 +45,7 @@ object EllipticOrbit {
      */
     fun getOrbitalPlane(GM: Double, meanAnomaly: Radian, a: Double, eccentricity: Double, maxInteractions: Int = 15): OrbitalPlane {
         val k = sqrt(GM / a)
-        val eccentricAnomaly = getEccentricAnomaly(meanAnomaly, eccentricity)
+        val eccentricAnomaly = getEccentricAnomaly(meanAnomaly, eccentricity, maxInteractions)
         val cosE = cos(eccentricAnomaly)
         val sinE = sin(eccentricAnomaly)
         val fac = sqrt((1.0 - eccentricity) * (1.0 + eccentricity))

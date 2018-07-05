@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Class-Path: annotations-13.0.jar kotlin-stdlib-1.2.50.jar kotlin-stdli
- b-common-1.2.50.jar
-Main-Class: 
-

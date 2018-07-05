@@ -49,17 +49,17 @@ internal class NutationTest {
         }
     }
 
-    fun getIAU1980Data() = Stream.of(
+    fun getIAU1980Data() = listOf(
             Data(0.0, NutationAngles(-6.750247617532478E-5, -2.7992212383770136E-5)),
             Data(-.5, NutationAngles(-1.6025705416771623E-5, 4.031770174572796E-5)),
             Data(10.0, NutationAngles(6.179874108902156E-5, -3.46804461672148E-5))
     )
-    fun getIAU2000Data() = Stream.of(
+    fun getIAU2000Data() = listOf(
             Data(0.0, NutationAngles(-6.754422426417299E-5, -2.7970831192374143E-5)),
             Data(-.5, NutationAngles(-1.601424665756601E-5, 4.0351623057366754E-5)),
             Data(10.0, NutationAngles(6.180463412738758E-5, -3.467609027834701E-5))
     )
-    fun getIAU2006Data() = Stream.of(
+    fun getIAU2006Data() = listOf(
             Data(0.0, NutationAngles(-6.754422426417299E-5, -2.7970831192374143E-5)),
             Data(-.5, NutationAngles(-1.601424665756601E-5, 4.0351623057366754E-5)),
             Data(10.0, NutationAngles(6.180463412738758E-5, -3.4677053372078404E-5))

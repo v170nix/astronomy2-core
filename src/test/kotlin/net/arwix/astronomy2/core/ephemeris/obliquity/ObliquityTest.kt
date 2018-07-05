@@ -61,42 +61,42 @@ internal class ObliquityTest {
                 radToDegString(data.obliquity))
     }
 
-    fun getWilliamsData() = Stream.of(
+    fun getWilliamsData() = listOf(
             Data(0.0, 0.40909260143931053),
             Data(0.5, 0.40897907371566994),
             Data(-0.5, 0.4092061287384277),
             Data(10.0, 0.40683159588417683)
     )
 
-    fun getSimonData() = Stream.of(
+    fun getSimonData() = listOf(
             Data(0.0, 0.4090926296894037),
             Data(0.5, 0.4089791618438889),
             Data(-0.5, 0.4092060971661488),
             Data(10.0, 0.4068328322899633)
     )
 
-    fun getLaskarData() = Stream.of(
+    fun getLaskarData() = listOf(
             Data(0.0, 0.40909280422232897),
             Data(0.5, 0.4089793218435321),
             Data(-0.5, 0.4092062717679479),
             Data(10.0, 0.40683300561085434)
     )
 
-    fun getIAU1976Data() = Stream.of(
+    fun getIAU1976Data() = listOf(
             Data(0.0, 0.40909280422232897),
             Data(0.5, 0.4089793218435321),
             Data(-0.5, 0.4092062851709255),
             Data(10.0, 0.40683165260618137)
     )
 
-    fun getIAU2006Data() = Stream.of(
+    fun getIAU2006Data() = listOf(
             Data(0.0, 0.40909260143931053),
             Data(0.5, 0.40897907371566994),
             Data(-0.5, 0.4092061287384277),
             Data(10.0, 0.40683146498328676)
     )
 
-    fun getVONDRAK2011Data() = Stream.of(
+    fun getVONDRAK2011Data() = listOf(
             Data(0.0, 0.40909260143931053),
             Data(0.5, 0.40897907371566994),
             Data(-0.5, 0.4092061287384277),

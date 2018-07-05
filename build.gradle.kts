@@ -8,16 +8,28 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.api.publish.maven.MavenPom
 import java.net.URI
 
+import org.gradle.api.JavaVersion
+import org.gradle.api.Project
+import org.gradle.api.artifacts.PublishArtifact
+import org.gradle.api.artifacts.dsl.ArtifactHandler
+import org.gradle.api.publish.PublishingExtension
+import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.tasks.bundling.Jar
+
 plugins {
     kotlin("jvm") version "1.2.50"
-    id("com.jfrog.bintray") version "1.8.1"
     id("com.github.johnrengelman.shadow") version "2.0.2"
+//    id("java")
     `maven-publish`
+    id("com.jfrog.bintray") version "1.8.3"
 }
 
 group = "net.arwix.astronomy2"
 val artifactID = "astronomy-core"
-version = "0.22"
+version = "0.1.4"
+
+setProperty("targetCompatibility", JavaVersion.VERSION_1_6)
+setProperty("sourceCompatibility", JavaVersion.VERSION_1_6)
 
 repositories {
     mavenCentral()
@@ -27,11 +39,30 @@ repositories {
     }
 }
 
+configurations {
+
+}
+
 val shadowJar: ShadowJar by tasks
 shadowJar.apply {
     baseName = artifactID
     classifier = null
+    dependsOn("classes")
+    dependencies {
+        exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib:1.2.50"))
+        exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50"))
+        exclude(dependency("org.jetbrains:annotations:13.0"))
+        exclude(dependency("org.apiguardian:apiguardian-api:1.0.0"))
+    }
 }
+
+//fun sourceSets(name: String) = the<JavaPluginConvention>().sourceSets.getByName(name)
+
+//val sourcesJar = task<Jar>("sourcesJar") {
+//    dependsOn("classes")
+//    from(sourceSets("main").allSource)
+//    classifier = null
+//}
 
 dependencies {
     compile(kotlin("stdlib"))
@@ -42,8 +73,9 @@ dependencies {
 
 tasks {
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "1.6"
     }
+
     withType(GradleBuild::class.java) {
         dependsOn(shadowJar)
     }
@@ -74,6 +106,7 @@ bintray {
 publishing {
     publications.invoke {
         "ProjectPublication"(MavenPublication::class) {
+//            from(components.getByName("java"))
             groupId = project.group as String
             artifactId = artifactID
             artifact(shadowJar)
@@ -94,6 +127,18 @@ fun MavenPom.addDependencies() = withXml {
         }
     }
 }
+
+//inline fun Project.artifacts(configuration: KotlinArtifactsHandler.() -> Unit) =
+//        KotlinArtifactsHandler(artifacts).configuration()
+
+//class KotlinArtifactsHandler(val artifacts: ArtifactHandler) : ArtifactHandler by artifacts {
+//
+//    operator fun String.invoke(dependencyNotation: Any): PublishArtifact =
+//            artifacts.add(this, dependencyNotation)
+//
+//    inline operator fun invoke(configuration: KotlinArtifactsHandler.() -> Unit) =
+//            configuration()
+//}
 
 // java.sourceSets["test"].java.srcDir("src/test/kotlin")
 

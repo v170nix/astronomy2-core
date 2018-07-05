@@ -6,7 +6,19 @@ import net.arwix.astronomy2.core.JT
 import net.arwix.astronomy2.core.Radian
 import net.arwix.astronomy2.core.math.polynomialSum
 
-private val MercurySimonJ2000 = lazy {
+fun getSimonJ2000KeplerElements(idBody: IdBodyKeplerElements): KeplerElements = when (idBody) {
+    ID_MERCURY_KEPLER_ELEMENTS -> MercurySimonJ2000
+    ID_VENUS_KEPLER_ELEMENTS -> VenusSimonJ2000
+    ID_EARTH_KEPLER_ELEMENTS -> EarthSimonJ2000
+    ID_MARS_KEPLER_ELEMENTS -> MarsSimonJ2000
+    ID_JUPITER_KEPLER_ELEMENTS -> JupiterSimonJ2000
+    ID_SATURN_KEPLER_ELEMENTS -> SaturnSimonJ2000
+    ID_URANUS_KEPLER_ELEMENTS -> UranusSimonJ2000
+    ID_NEPTUNE_KEPLER_ELEMENTS -> NeptuneSimonJ2000
+    else -> throw IndexOutOfBoundsException()
+}
+
+private val MercurySimonJ2000 by lazy {
     KeplerElementsImpl(
             aCoefficients = doubleArrayOf(0.3870983098),
             LCoefficients = doubleArrayOf(252.25090552 - 0.047 * ARCSEC_TO_DEG, 5381016286.88982 * ARCSEC_TO_DEG, -1.92789 * ARCSEC_TO_DEG, 0.00639 * ARCSEC_TO_DEG),
@@ -16,7 +28,7 @@ private val MercurySimonJ2000 = lazy {
             OCoefficients = doubleArrayOf(48.33089304, -4515.21727 * ARCSEC_TO_DEG, -31.79892 * ARCSEC_TO_DEG, -0.71933 * ARCSEC_TO_DEG, 0.01242 * ARCSEC_TO_DEG))
 }
 
-private val VenusSimonJ2000 = lazy {
+private val VenusSimonJ2000 by lazy {
     KeplerElementsImpl(
             aCoefficients = doubleArrayOf(0.7233298200),
             LCoefficients = doubleArrayOf(181.97980085, 2106641364.33548 * ARCSEC_TO_DEG, 0.59381 * ARCSEC_TO_DEG, -0.00627 * ARCSEC_TO_DEG),
@@ -26,7 +38,7 @@ private val VenusSimonJ2000 = lazy {
             OCoefficients = doubleArrayOf(76.67992019, -10008.48154 * ARCSEC_TO_DEG, -51.32614 * ARCSEC_TO_DEG, -0.5891 * ARCSEC_TO_DEG, -0.004665 * ARCSEC_TO_DEG))
 }
 
-private val EarthSimonJ2000 = lazy {
+private val EarthSimonJ2000 by lazy {
     KeplerElementsImpl(
             aCoefficients = doubleArrayOf(1.0000010178),
             LCoefficients = doubleArrayOf(100.46645683, 1295977422.83429 * ARCSEC_TO_DEG, -2.04411 * ARCSEC_TO_DEG, -0.00523 * ARCSEC_TO_DEG),
@@ -36,7 +48,7 @@ private val EarthSimonJ2000 = lazy {
             OCoefficients = doubleArrayOf(174.87317577, -8679.27034 * ARCSEC_TO_DEG, 15.34191 * ARCSEC_TO_DEG, 0.00532 * ARCSEC_TO_DEG, -0.03734 * ARCSEC_TO_DEG, -0.00073 * ARCSEC_TO_DEG, 0.00004 * ARCSEC_TO_DEG))
 }
 
-private val MarsSimonJ2000 = lazy {
+private val MarsSimonJ2000 by lazy {
     KeplerElementsImpl(
             aCoefficients = doubleArrayOf(1.5236793419, 3e-10),
             LCoefficients = doubleArrayOf(355.43299958, 689050774.93988 * ARCSEC_TO_DEG, 0.94264 * ARCSEC_TO_DEG, -0.01043 * ARCSEC_TO_DEG),
@@ -46,7 +58,7 @@ private val MarsSimonJ2000 = lazy {
             OCoefficients = doubleArrayOf(49.55809321, -10620.90088 * ARCSEC_TO_DEG, -230.57416 * ARCSEC_TO_DEG, -7.06942 * ARCSEC_TO_DEG, -0.6892 * ARCSEC_TO_DEG, -0.05829 * ARCSEC_TO_DEG))
 }
 
-private val JupiterSimonJ2000 = lazy {
+private val JupiterSimonJ2000 by lazy {
     KeplerElementsImpl(
             aCoefficients = doubleArrayOf(5.2026032092, 19132e-10, -39e-10, -60e-10, -10e-10, 1e-10),
             LCoefficients = doubleArrayOf(34.35151874, 109256603.77991 * ARCSEC_TO_DEG, -30.60378 * ARCSEC_TO_DEG, 0.05706 * ARCSEC_TO_DEG, 0.04667 * ARCSEC_TO_DEG, 0.00591 * ARCSEC_TO_DEG, -0.00034 * ARCSEC_TO_DEG),
@@ -56,7 +68,7 @@ private val JupiterSimonJ2000 = lazy {
             OCoefficients = doubleArrayOf(100.46440702, 6362.03561 * ARCSEC_TO_DEG, 326.52178 * ARCSEC_TO_DEG, -26.18091 * ARCSEC_TO_DEG, -2.10322 * ARCSEC_TO_DEG, 0.04453 * ARCSEC_TO_DEG, 0.01154 * ARCSEC_TO_DEG))
 }
 
-private val SaturnSimonJ2000Data = lazy {
+private val SaturnSimonJ2000 by lazy {
     KeplerElementsImpl(
             aCoefficients = doubleArrayOf(9.5549091915, -0.0000213896, 444e-10, 670e-10, 110e-10, -7e-10, -1e-10),
             LCoefficients = doubleArrayOf(50.07744430, 43996098.55732 * ARCSEC_TO_DEG, 75.61614 * ARCSEC_TO_DEG, -0.16618 * ARCSEC_TO_DEG, -0.11484 * ARCSEC_TO_DEG, -0.01452 * ARCSEC_TO_DEG, 0.00083 * ARCSEC_TO_DEG),
@@ -66,7 +78,7 @@ private val SaturnSimonJ2000Data = lazy {
             OCoefficients = doubleArrayOf(113.66550252, -9240.19942 * ARCSEC_TO_DEG, -66.23743 * ARCSEC_TO_DEG, 1.72778 * ARCSEC_TO_DEG, 0.2699 * ARCSEC_TO_DEG, 0.03610 * ARCSEC_TO_DEG, -0.00248 * ARCSEC_TO_DEG))
 }
 
-private val UranusSimonJ2000 = lazy {
+private val UranusSimonJ2000 by lazy {
     KeplerElementsImpl(
             aCoefficients = doubleArrayOf(19.2184460618, -3716e-10, 979e-10),
             LCoefficients = doubleArrayOf(314.05500511, 15424811.93933 * ARCSEC_TO_DEG, -1.75083 * ARCSEC_TO_DEG, 0.02156 * ARCSEC_TO_DEG),
@@ -76,7 +88,7 @@ private val UranusSimonJ2000 = lazy {
             OCoefficients = doubleArrayOf(74.00595701, 2669.15033 * ARCSEC_TO_DEG, 145.93964 * ARCSEC_TO_DEG, 0.42917 * ARCSEC_TO_DEG, -0.0912 * ARCSEC_TO_DEG))
 }
 
-private val NeptuneSimonJ2000 = lazy {
+private val NeptuneSimonJ2000 by lazy {
     KeplerElementsImpl(
             aCoefficients = doubleArrayOf(30.1103868694, -16635e-10, 686e-10),
             LCoefficients = doubleArrayOf(304.34866548, 7865503.20744 * ARCSEC_TO_DEG, 0.21103 * ARCSEC_TO_DEG, -0.00895 * ARCSEC_TO_DEG),
@@ -87,12 +99,12 @@ private val NeptuneSimonJ2000 = lazy {
 }
 
 private interface KeplerElementsData {
-     val aCoefficients: DoubleArray
-     val eCoefficients: DoubleArray
-     val iCoefficients: DoubleArray
-     val LCoefficients: DoubleArray
-     val WCoefficients: DoubleArray
-     val OCoefficients: DoubleArray
+    val aCoefficients: DoubleArray
+    val eCoefficients: DoubleArray
+    val iCoefficients: DoubleArray
+    val LCoefficients: DoubleArray
+    val WCoefficients: DoubleArray
+    val OCoefficients: DoubleArray
 }
 
 private class KeplerElementsImpl(override val aCoefficients: DoubleArray,
@@ -100,7 +112,7 @@ private class KeplerElementsImpl(override val aCoefficients: DoubleArray,
                                  override val iCoefficients: DoubleArray,
                                  override val LCoefficients: DoubleArray,
                                  override val WCoefficients: DoubleArray,
-                                 override val OCoefficients: DoubleArray): KeplerElementsData, KeplerElements {
+                                 override val OCoefficients: DoubleArray) : KeplerElementsData, KeplerElements {
 
     override fun getSemiMajorAxis(jT: JT): Double = aCoefficients.polynomialSum(jT / 10.0)
     override fun getEccentricity(jT: JT): Radian = eCoefficients.polynomialSum(jT / 10.0)

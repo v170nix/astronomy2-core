@@ -13,3 +13,5 @@ interface HeliocentricEclipticEphemeris {
 }
 
 typealias getHeliocentricEclipticCoordinates = (jT: JT) -> Vector
+
+typealias getCoroutineHeliocentricEclipticCoordinates = suspend (jT: JT) -> Vector

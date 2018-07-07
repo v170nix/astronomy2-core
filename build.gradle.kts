@@ -27,7 +27,7 @@ plugins {
 
 group = "net.arwix.astronomy2"
 val artifactID = "astronomy-core"
-version = "0.3.0"
+version = "0.3.3"
 
 setProperty("targetCompatibility", JavaVersion.VERSION_1_6)
 setProperty("sourceCompatibility", JavaVersion.VERSION_1_6)
@@ -46,11 +46,13 @@ shadowJar.apply {
     classifier = null
     dependsOn("classes")
     dependencies {
-        exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib:1.2.51"))
-        exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib-common:1.2.51"))
-        exclude(dependency("org.jetbrains:annotations:13.0"))
-        exclude(dependency("org.apiguardian:apiguardian-api:1.0.0"))
-        exclude(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.23.4"))
+        exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib"))
+        exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib-common"))
+        exclude(dependency("org.jetbrains:annotations"))
+        exclude(dependency("org.apiguardian:apiguardian-api"))
+        exclude(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core"))
+        exclude(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core-common"))
+        exclude(dependency("org.jetbrains.kotlinx:atomicfu-common"))
     }
 }
 

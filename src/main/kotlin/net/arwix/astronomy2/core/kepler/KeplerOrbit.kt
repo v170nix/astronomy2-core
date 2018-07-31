@@ -6,6 +6,8 @@ import net.arwix.astronomy2.core.Radian
 import net.arwix.astronomy2.core.vector.Matrix
 import net.arwix.astronomy2.core.vector.Matrix.Companion.AXIS_X
 import net.arwix.astronomy2.core.vector.Matrix.Companion.AXIS_Z
+import net.arwix.astronomy2.core.vector.Matrix.Companion.getRotateX
+import net.arwix.astronomy2.core.vector.Matrix.Companion.getRotateZ
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -21,7 +23,7 @@ object KeplerOrbit {
      */
     @Ecliptic
     fun createGaussianMatrix(Omega: Radian,@Ecliptic i: Radian, omega: Radian): Matrix
-            = Matrix(AXIS_Z, -Omega) * Matrix(AXIS_X, -i) * Matrix(AXIS_Z, -omega)
+            = getRotateZ(-Omega) * getRotateX(-i) * getRotateZ(-omega)
 
     /**
      * Computes position and velocity vectors for Keplerian orbits w.r.t. the ecliptic

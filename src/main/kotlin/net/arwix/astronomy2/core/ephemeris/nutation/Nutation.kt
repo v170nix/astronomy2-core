@@ -38,7 +38,7 @@ fun createEquatorialNutationMatrix(angles: NutationAngles, obliquity: Obliquity)
             Matrix(AXIS_X, obliquity)
 }
 
-fun createObliquityElements(id: IdNutation, t: JT, obliquity: Obliquity? = null): NutationElements = object : NutationElements {
+fun createNutationElements(id: IdNutation, t: JT, obliquity: Obliquity? = null): NutationElements = object : NutationElements {
     override val id = id
     override val t: JT = t
     override val angles = getNutationAngles(id, t)

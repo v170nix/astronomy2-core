@@ -36,7 +36,7 @@ class Matrix() {
     operator fun times(right: Matrix): Matrix = Matrix().apply {
         for (i in 0..2) {
             for (j in 0..2) {
-                this[i, j] = (0..2).sumByDouble { k -> this[i, k] * right[k, j] }
+                this[i, j] = (0..2).sumByDouble { k -> this@Matrix[i, k] * right[k, j] }
             }
         }
     }

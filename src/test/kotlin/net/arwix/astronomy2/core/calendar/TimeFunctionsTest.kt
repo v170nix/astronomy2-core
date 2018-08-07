@@ -1,5 +1,7 @@
 package net.arwix.astronomy2.core.calendar
 
+import net.arwix.astronomy2.ephemeris.vsop87a.ID_VSOP87_JUPITER
+import net.arwix.astronomy2.ephemeris.vsop87a.createSuspendedVsop87ACoordinates
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*

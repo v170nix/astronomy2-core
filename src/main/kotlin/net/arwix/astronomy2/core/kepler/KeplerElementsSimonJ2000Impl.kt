@@ -117,7 +117,7 @@ private class KeplerElementsImpl(override val aCoefficients: DoubleArray,
     override fun getSemiMajorAxis(jT: JT): Double = aCoefficients.polynomialSum(jT / 10.0)
     override fun getEccentricity(jT: JT): Radian = eCoefficients.polynomialSum(jT / 10.0)
     override fun getInclination(jT: JT): Radian = iCoefficients.polynomialSum(jT / 10.0) * DEG_TO_RAD
-    override fun getLongitude(jT: JT): Radian = WCoefficients.polynomialSum(jT / 10.0) * DEG_TO_RAD
-    override fun getPerihelionLongitude(jT: JT): Radian = OCoefficients.polynomialSum(jT / 10.0) * DEG_TO_RAD
-    override fun getAscendingNodeLongitude(jT: JT): Radian = LCoefficients.polynomialSum(jT / 10.0) * DEG_TO_RAD
+    override fun getLongitude(jT: JT): Radian = LCoefficients.polynomialSum(jT / 10.0) * DEG_TO_RAD
+    override fun getPerihelionLongitude(jT: JT): Radian = WCoefficients.polynomialSum(jT / 10.0) * DEG_TO_RAD
+    override fun getAscendingNodeLongitude(jT: JT): Radian = OCoefficients.polynomialSum(jT / 10.0) * DEG_TO_RAD
 }

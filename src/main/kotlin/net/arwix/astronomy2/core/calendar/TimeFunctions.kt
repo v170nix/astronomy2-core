@@ -34,9 +34,11 @@ fun getJT(mJD: MJD): JT = (mJD - MJD_J2000) / 36525.0
  */
 fun getMJD(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int, millisecond: Int, isJulianDate: Boolean = false): MJD {
     var y = year
-    val m = if (month <= 2) { --y; month + 12 } else month
+    val m = if (month <= 2) {
+        --y; month + 12
+    } else month
 //if (10000L * y + 100L * m + day <= 15821004L)
-    val b: Long =  if (isJulianDate) -2L + (y + 4716L) / 4 - 1179L else (y / 400L - y / 100 + y / 4)
+    val b: Long = if (isJulianDate) -2L + (y + 4716L) / 4 - 1179L else (y / 400L - y / 100 + y / 4)
 
     val mJDN = 365 * y - 679004L + b + (30.6001 * (m + 1)).toInt() + day
     val mJDF = (abs(hour) + abs(minute) / 60.0 + abs(second + millisecond / 1000.0) / 3600.0) / 24.0
@@ -46,7 +48,9 @@ fun getMJD(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int,
 
 fun isJulianDate(year: Int, month: Int, day: Int): Boolean {
     var y = year
-    val m = if (month <= 2) { --y; month + 12 } else month
+    val m = if (month <= 2) {
+        --y; month + 12
+    } else month
     return 10000L * y + 100L * m + day <= 15821004L
 }
 
@@ -57,6 +61,21 @@ fun getMJD(milliseconds: Long): MJD {
 fun getDeltaT(milliseconds: Long): Double {
     val y = milliseconds / 1000.0 / SECS_IN_DAY / TROPICAL_YEAR + 1970L
     return getDeltaT(y.toInt(), ((y - y.toInt()) * 12).toInt() + 1)
+}
+
+
+/**
+ * @param month 1-12
+ * @return deltaT
+ */
+fun getDeltaT(year: Int, month: Int, unit: TimeUnit): Double = getDeltaT(year, month) * when (unit) {
+    TimeUnit.NANOSECONDS -> 1000000000.0
+    TimeUnit.MICROSECONDS -> 1000000.0
+    TimeUnit.MILLISECONDS -> 1000.0
+    TimeUnit.SECONDS -> 1.0
+    TimeUnit.MINUTES -> 1.0 / 60.0
+    TimeUnit.HOURS -> 1.0 / 3600.0
+    TimeUnit.DAYS -> 1.0 / 86400.0
 }
 
 /**

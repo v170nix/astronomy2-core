@@ -1,7 +1,8 @@
-package net.arwix.astronomy2.core.ephemeris
+package net.arwix.astronomy2.core.ephemeris.calculation
 
 import kotlinx.coroutines.experimental.*
 import net.arwix.astronomy2.core.*
+import net.arwix.astronomy2.core.ephemeris.EclipticToEquatorialElements
 import net.arwix.astronomy2.core.ephemeris.precession.IdPrecession
 import net.arwix.astronomy2.core.vector.RectangularVector
 import net.arwix.astronomy2.core.vector.Vector

@@ -1,19 +1,15 @@
 package net.arwix.astronomy2.core.ephemeris
 
 import kotlinx.coroutines.experimental.runBlocking
-import net.arwix.astronomy2.core.JULIAN_DAYS_PER_CENTURY
 import net.arwix.astronomy2.core.RAD_TO_DEG
-import net.arwix.astronomy2.core.calendar.getDeltaT
 import net.arwix.astronomy2.core.calendar.getJT
 import net.arwix.astronomy2.core.calendar.getMJD
+import net.arwix.astronomy2.core.ephemeris.calculation.PositionEphemeris
 import net.arwix.astronomy2.core.ephemeris.precession.*
-import net.arwix.astronomy2.core.kepler.ID_MARS_KEPLER_ELEMENTS
-import net.arwix.astronomy2.core.math.toDeg
 import net.arwix.astronomy2.core.vector.SphericalVector
 import net.arwix.astronomy2.core.vector.Vector
 import net.arwix.astronomy2.core.vector.convert
 import net.arwix.astronomy2.ephemeris.vsop87a.ID_VSOP87_EARTH
-import net.arwix.astronomy2.ephemeris.vsop87a.ID_VSOP87_JUPITER
 import net.arwix.astronomy2.ephemeris.vsop87a.ID_VSOP87_MARS
 import net.arwix.astronomy2.ephemeris.vsop87a.createSuspendedVsop87ACoordinates
 import org.junit.jupiter.api.Test

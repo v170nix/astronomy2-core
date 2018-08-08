@@ -24,6 +24,9 @@ fun Calendar.getDeltaT(unit: TimeUnit): Double =
             TimeUnit.DAYS -> 1.0 / 86400.0
         }
 
+fun Calendar.copy(): Calendar = Calendar.getInstance(timeZone).also {
+    it.timeInMillis = this.timeInMillis
+}
 
 fun Calendar.getJT(applyDeltaT: Boolean = false): JT =
         getJT(getMJD() + if (applyDeltaT) getDeltaT(TimeUnit.DAYS) else 0.0)
@@ -92,7 +95,7 @@ fun Calendar.getHours(): Double {
     return hourOfDay() + (minute() + second() / 60.0) / 60.0
 }
 
-fun Calendar.setHours(hours: Double) {
+fun Calendar.setHours(hours: Double): Calendar {
     val hour = hours.toInt()
     val minutes = (hours - hour) * 60.0
     val minute = minutes.toInt()
@@ -104,6 +107,7 @@ fun Calendar.setHours(hours: Double) {
     set(Calendar.MINUTE, minute)
     set(Calendar.SECOND, second)
     set(Calendar.MILLISECOND, millisecond)
+    return this
 }
 
 

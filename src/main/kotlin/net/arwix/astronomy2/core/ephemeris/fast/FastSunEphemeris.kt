@@ -12,7 +12,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 @Geocentric @Ecliptic @Apparent
-fun createFastSunGeocentricEclipticApparentEphemeris(): getGeocentricEclipticCoordinates {
+fun findFastSunGeocentricEclipticApparentEphemeris(): getGeocentricEclipticCoordinates {
     return { jT ->
         val aberration = (0.0000974 * cos((177.63 + 35999.01848 * jT) * DEG_TO_RAD) - 0.005575).normalizeDegree() * DEG_TO_RAD
         val longitude = (282.7771834
@@ -26,13 +26,13 @@ fun createFastSunGeocentricEclipticApparentEphemeris(): getGeocentricEclipticCoo
 
 
         var c = (1.9146 - .004817 * jT - .000014 * jT * jT) * Math.sin(solarAnomaly)
-        c += (.019993 - .000101 * jT) * Math.sin(2 * solarAnomaly)
-        c += .00029 * Math.sin(3.0 * solarAnomaly) // Correction to the mean ecliptic longitude
+        c += (.019993 - .000101 * jT) * sin(2 * solarAnomaly)
+        c += .00029 * sin(3.0 * solarAnomaly) // Correction to the mean ecliptic longitude
         val nutation: Radian = getNutation(jT)
 
         val ecc = getSimonJ2000KeplerElements(ID_EARTH_KEPLER_ELEMENTS).getEccentricity(jT)
         val v = solarAnomaly + c * DEG_TO_RAD
-        val distance = 1.000001018 * (1.0 - ecc * ecc) / (1.0 + ecc * Math.cos(v)) // In UA
+        val distance = 1.000001018 * (1.0 - ecc * ecc) / (1.0 + ecc * cos(v)) // In UA
 
         SphericalVector(longitude + nutation + aberration, 0.0, distance)
     }

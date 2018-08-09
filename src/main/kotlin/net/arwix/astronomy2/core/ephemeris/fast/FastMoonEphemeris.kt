@@ -13,7 +13,7 @@ import kotlin.math.sin
 
 
 @Geocentric @Ecliptic @Apparent
-fun getFastMoonGeocentricEclipticApparentLongitude(t: JT): Radian {
+fun findMoonGeocentricEclipticApparentLongitude(t: JT): Radian {
 
     val solarAnomaly = getSolarAnomaly(t) //M
     val lunarElongation = getLunarElongation(t) //D
@@ -94,7 +94,7 @@ fun getFastMoonGeocentricApparentDistance(t: JT): Double {
 }
 
 @Geocentric @Ecliptic
-val getCoroutineFastMoonGeocentricEclipticApparentCoordinates:  getCoroutineGeocentricEclipticCoordinates  =
+fun findSuspendedFastMoonGeocentricEclipticApparentEphemeris(): getCoroutineGeocentricEclipticCoordinates =
     { t: Double ->
 
         val solarAnomaly = getSolarAnomaly(t) //M

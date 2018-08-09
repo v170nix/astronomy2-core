@@ -24,8 +24,13 @@ fun Calendar.getDeltaT(unit: TimeUnit): Double =
             TimeUnit.DAYS -> 1.0 / 86400.0
         }
 
-fun Calendar.copy(): Calendar = Calendar.getInstance(timeZone).also {
+fun Calendar.copy(): Calendar = Calendar.getInstance(this.timeZone).also {
     it.timeInMillis = this.timeInMillis
+}
+
+fun Calendar.applyMJD(mjd: MJD, applyDeltaT: Boolean = false): Calendar {
+    fromMJDToCalendar(mjd, this, applyDeltaT)
+    return this
 }
 
 fun Calendar.getJT(applyDeltaT: Boolean = false): JT =

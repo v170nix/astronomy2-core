@@ -17,11 +17,17 @@ class PositionEphemeris(
     private lateinit var earthVelocity: Vector
     private lateinit var elements: EclipticToEquatorialElements
 
-    suspend fun setJT0(jt0: JT) {
+    fun copy() = PositionEphemeris(idPrecession, findEarthCoordinates).also {
+        it.earthVelocity = RectangularVector(earthVelocity)
+        it.elements = EclipticToEquatorialElements(elements.precessionElements.id, elements.precessionElements.jT)
+    }
+
+    suspend fun setJT0(jt0: JT): PositionEphemeris {
         val earth = async(CommonPool) { findEarthCoordinates(jt0) }
         val earthPlus = async(CommonPool) { findEarthCoordinates(jt0 + 0.01 / JULIAN_DAYS_PER_CENTURY) }
         elements = EclipticToEquatorialElements(idPrecession, jt0)
         earthVelocity = (earthPlus.await() - earth.await()) / 0.01
+        return this
     }
 
     suspend fun createBodyOptions(jt0: JT, findBodyCoordinates: suspend (jt: JT) -> Vector): Options {

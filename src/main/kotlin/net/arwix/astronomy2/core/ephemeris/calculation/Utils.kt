@@ -25,7 +25,7 @@ internal suspend inline fun getSinAltitude(MJD: Double,
                                    @Geocentric
                                    @Equatorial
                                    @Apparent
-                                   crossinline findCoordinates: suspend (jT: JT) -> Vector): Double {
+                                   noinline findCoordinates: suspend (jT: JT) -> Vector): Double {
     val jt = (MJD - MJD_J2000 - deltaT) / 36525.0
     val position = findCoordinates(jt)
     val p: SphericalVector = convert(position)

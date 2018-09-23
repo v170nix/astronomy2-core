@@ -18,7 +18,7 @@ import org.gradle.api.tasks.bundling.Jar
 import org.jetbrains.kotlin.gradle.dsl.Coroutines
 
 plugins {
-    kotlin("jvm") version "1.2.51"
+    kotlin("jvm") version "1.2.70"
     id("com.github.johnrengelman.shadow") version "2.0.2"
 //    id("java")
     `maven-publish`
@@ -27,7 +27,7 @@ plugins {
 
 group = "net.arwix.astronomy2"
 val artifactID = "astronomy-core"
-version = "0.3.5"
+version = "0.4.0"
 
 setProperty("targetCompatibility", JavaVersion.VERSION_1_6)
 setProperty("sourceCompatibility", JavaVersion.VERSION_1_6)
@@ -43,16 +43,16 @@ repositories {
 val shadowJar: ShadowJar by tasks
 shadowJar.apply {
     baseName = artifactID
-    classifier = null
+    classifier = ""
     dependsOn("classes")
     dependencies {
         exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib"))
         exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib-common"))
+        exclude(dependency("org.jetbrains.kotlinx:atomicfu-common"))
         exclude(dependency("org.jetbrains:annotations"))
         exclude(dependency("org.apiguardian:apiguardian-api"))
         exclude(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core"))
         exclude(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core-common"))
-        exclude(dependency("org.jetbrains.kotlinx:atomicfu-common"))
     }
 }
 
@@ -66,7 +66,7 @@ shadowJar.apply {
 
 dependencies {
     compile(kotlin("stdlib"))
-    compile ("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.23.4")
+    compile ("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.26.1")
     testCompile("org.junit.jupiter:junit-jupiter-api:5.2.0")
     testCompile("org.junit.jupiter:junit-jupiter-params:5.2.0")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:5.2.0")

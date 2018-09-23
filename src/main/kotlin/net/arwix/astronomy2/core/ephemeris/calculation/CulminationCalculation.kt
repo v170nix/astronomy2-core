@@ -19,7 +19,6 @@ sealed class CulminationCalculationResult {
 }
 
 suspend fun findCulmination(
-        objectType: ObjectType,
         precision: Double,
         calendar: Calendar,
         latitude: Radian,

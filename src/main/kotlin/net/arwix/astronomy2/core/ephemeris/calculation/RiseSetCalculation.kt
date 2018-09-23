@@ -110,4 +110,4 @@ suspend fun findRiseSet(
     if (rise != null) return@coroutineScope rise
     if (set != null) return@coroutineScope set
     return@coroutineScope RiseSetCalculationResult.None(yMinus > 0.0)
-}
+}!!

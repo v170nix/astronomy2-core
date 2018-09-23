@@ -27,8 +27,8 @@ internal class PositionEphemerisTest {
         val jt0 = jt - 5 / 36525.0
         //    val jt = 0.1857768876007777
 
-        val precessionElements = createPrecessionElements(ID_PRECESSION_VONDRAK_2011, jt)
-        val elements = EclipticToEquatorialElements(ID_PRECESSION_IAU_2006, jt0)
+//        val precessionElements = createPrecessionElements(ID_PRECESSION_VONDRAK_2011, jt)
+//        val elements = EclipticToEquatorialElements(ID_PRECESSION_IAU_2006, jt0)
 
         val cE = createSuspendedVsop87ACoordinates(ID_VSOP87_EARTH)
         val cB = createSuspendedVsop87ACoordinates(ID_VSOP87_MARS)

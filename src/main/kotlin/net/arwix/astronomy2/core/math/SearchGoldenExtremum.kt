@@ -1,6 +1,6 @@
 package net.arwix.astronomy2.core.math
 
-import kotlinx.coroutines.experimental.CommonPool
+
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.coroutineScope
@@ -57,8 +57,8 @@ class SearchGoldenExtremum(private val a: Double,
             val d = (b - a) / GOLDEN_RATIO
             val x1 = b - d
             val x2 = a + d
-            val y1 = async(CommonPool) { function(x1) }
-            val y2 = async(CommonPool) { function(x2) }
+            val y1 = async { function(x1) }
+            val y2 = async { function(x2) }
             if (y1.await() >= y2.await()) {
                 a = x1
             } else {

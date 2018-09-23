@@ -32,12 +32,12 @@ object HyperbolicOrbit {
      * @param GM Product of gravitational constant and centre mass [AU^3*d^-2]
      * @param t0 Time of perihelion passage
      * @param t Time for calculation
-     * @param a Semi-major axis of the orbit in AU
+     * @param A Semi-major axis of the orbit in AU
      * @param e eccentricity of the orbit (>1)
      */
-    fun getOrbitalPlane(GM: Double, t0: JT, t: JT, a: Double, eccentricity: Double, maxInteractions: Int = 15): OrbitalPlane {
+    fun getOrbitalPlane(GM: Double, t0: JT, t: JT, A: Double, eccentricity: Double, maxInteractions: Int = 15): OrbitalPlane {
 
-        val a = abs(a)
+        val a = abs(A)
         val k = sqrt(GM / a)
         val Mh = k * (t - t0) / a
         val H = getEccentricAnomaly(Mh, eccentricity, maxInteractions)

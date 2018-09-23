@@ -1,7 +1,7 @@
 package net.arwix.astronomy2.core.ephemeris.calculation
 
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.coroutineScope
 import kotlinx.coroutines.experimental.yield
 import net.arwix.astronomy2.core.*
 import net.arwix.astronomy2.core.calendar.*
@@ -35,7 +35,7 @@ suspend fun findRiseSet(
         @Equatorial
         @Apparent
         findCoordinates: suspend (jT: JT) -> Vector
-): RiseSetCalculationResult {
+): RiseSetCalculationResult = coroutineScope {
 
     val innerCalendar = calendar.copy().resetTime()
     val deltaT = innerCalendar.getDeltaT(TimeUnit.DAYS)
@@ -59,7 +59,7 @@ suspend fun findRiseSet(
     var set: RiseSetCalculationResult.Set? = null
 
     do {
-        val defferedY0 = async(CommonPool) {
+        val defferedY0 = async {
             getSinAltitude(MJD0 + hour / 24.0,
                     deltaT,
                     longitude,
@@ -68,7 +68,7 @@ suspend fun findRiseSet(
                     findCoordinates) - objectType.sinRefractionAngle
         }
 
-        val defferedY1 = async(CommonPool) {
+        val defferedY1 = async {
             getSinAltitude(MJD0 + (hour + 1.0) / 24.0,
                     deltaT,
                     longitude,
@@ -96,7 +96,7 @@ suspend fun findRiseSet(
                     Pair(hour + quadraticResult.root2, hour + quadraticResult.root1) else
                     Pair(hour + quadraticResult.root1, hour + quadraticResult.root2)
 
-                return RiseSetCalculationResult.RiseSet(
+                return@coroutineScope RiseSetCalculationResult.RiseSet(
                         RiseSetCalculationResult.Rise(innerCalendar.copy().setHours(LT_Rise)),
                         RiseSetCalculationResult.Set(innerCalendar.copy().setHours(LT_Set))
                 )
@@ -106,8 +106,8 @@ suspend fun findRiseSet(
         hour += 2.0
     } while (!((hour == 25.0) || (rise != null && set != null)))
 
-    if (rise != null && set != null) return RiseSetCalculationResult.RiseSet(rise, set)
-    if (rise != null) return rise
-    if (set != null) return set
-    return RiseSetCalculationResult.None(yMinus > 0.0)
+    if (rise != null && set != null) return@coroutineScope RiseSetCalculationResult.RiseSet(rise, set)
+    if (rise != null) return@coroutineScope rise
+    if (set != null) return@coroutineScope set
+    return@coroutineScope RiseSetCalculationResult.None(yMinus > 0.0)
 }

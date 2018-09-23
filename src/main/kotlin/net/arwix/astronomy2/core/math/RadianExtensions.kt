@@ -6,7 +6,7 @@ import net.arwix.astronomy2.core.*
  * Reduce an angle in radians to the range (0 - 2 Pi).
  * @return The reduced radian value.
  */
-inline fun Radian.normalize(): Radian {
+fun Radian.normalize(): Radian {
     if (this >= 0 && this < PI2) return this
     if (this < 0 && this >= -PI2) return this + PI2
     if (this >= PI2 && this < PI4) return this - PI2
@@ -21,6 +21,6 @@ inline fun Radian.normalize(): Radian {
 /**
  * Radians to hours
  */
-inline fun Radian.toHour(): Double = this * RAD_TO_HOUR
-inline fun Radian.toDay(): Double = this * RAD_TO_DAY
-inline fun Radian.toDeg(): Degree = this * RAD_TO_DEG
+fun Radian.toHour(): Double = this * RAD_TO_HOUR
+fun Radian.toDay(): Double = this * RAD_TO_DAY
+fun Radian.toDeg(): Degree = this * RAD_TO_DEG

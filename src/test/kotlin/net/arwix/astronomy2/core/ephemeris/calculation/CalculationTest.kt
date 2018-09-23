@@ -4,8 +4,8 @@ import kotlinx.coroutines.experimental.runBlocking
 import net.arwix.astronomy2.core.DEG_TO_RAD
 import net.arwix.astronomy2.core.Degree
 import net.arwix.astronomy2.core.calendar.*
-import net.arwix.astronomy2.core.ephemeris.fast.findSuspendedFastMoonGeocentricEclipticApparentEphemeris
-import net.arwix.astronomy2.core.ephemeris.fast.findFastSunGeocentricEclipticApparentEphemeris
+import net.arwix.astronomy2.core.ephemeris.fast.createSuspendedFastMoonGeocentricEclipticApparentEphemeris
+import net.arwix.astronomy2.core.ephemeris.fast.createFastSunGeocentricEclipticApparentEphemeris
 import net.arwix.astronomy2.core.ephemeris.obliquity.ID_OBLIQUITY_SIMON_1994
 import net.arwix.astronomy2.core.ephemeris.obliquity.getObliquityMatrix
 import net.arwix.astronomy2.core.ephemeris.precession.ID_PRECESSION_IAU_1976
@@ -52,7 +52,7 @@ internal class CalculationTest {
     fun `RiseSetSunFast`(data: RiseSetData) {
         val calendar = data.getCalendar()
 
-        val sunCoordinates = findFastSunGeocentricEclipticApparentEphemeris()
+        val sunCoordinates = createFastSunGeocentricEclipticApparentEphemeris()
         val obliquity = getObliquityMatrix(ID_OBLIQUITY_SIMON_1994, calendar.getJT())
 
         runBlocking {
@@ -74,7 +74,7 @@ internal class CalculationTest {
         val obliquity = getObliquityMatrix(ID_OBLIQUITY_SIMON_1994, calendar.getJT())
 
         runBlocking {
-            val moonCoordinates = findSuspendedFastMoonGeocentricEclipticApparentEphemeris()
+            val moonCoordinates = createSuspendedFastMoonGeocentricEclipticApparentEphemeris()
             val result =findRiseSet(ObjectType.MOON,
                     calendar,
                     data.getRadLatitude(),

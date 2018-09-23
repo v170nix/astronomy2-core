@@ -1,5 +1,6 @@
 package net.arwix.astronomy2.core.ephemeris.coordinates
 
+import kotlinx.coroutines.experimental.CoroutineScope
 import net.arwix.astronomy2.core.Ecliptic
 import net.arwix.astronomy2.core.Heliocentric
 import net.arwix.astronomy2.core.JT
@@ -12,6 +13,5 @@ interface HeliocentricEclipticEphemeris {
     fun getCoordinates(jT: JT) :Vector
 }
 
-typealias getHeliocentricEclipticCoordinates = (jT: JT) -> Vector
-
-typealias getCoroutineHeliocentricEclipticCoordinates = suspend (jT: JT) -> Vector
+typealias createHeliocentricEclipticCoordinates = (jT: JT) -> Vector
+typealias createSuspendHeliocentricEclipticCoordinates = suspend CoroutineScope.(jT: JT) -> Vector

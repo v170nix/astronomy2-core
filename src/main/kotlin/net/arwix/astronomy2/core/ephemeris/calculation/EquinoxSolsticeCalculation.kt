@@ -1,7 +1,7 @@
 package net.arwix.astronomy2.core.ephemeris.calculation
 
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.coroutineScope
 import kotlinx.coroutines.experimental.yield
 import net.arwix.astronomy2.core.*
 import net.arwix.astronomy2.core.calendar.*
@@ -39,9 +39,11 @@ sealed class EquinoxSolsticeRequest(val year: Int) : Iterator<EquinoxSolsticeReq
 
 }
 
-suspend fun findEquinoxSolstice(request: EquinoxSolsticeRequest,
-                                positionEphemeris: PositionEphemeris,
-                                precision: Double = 0.1 / 24.0 / 3600.0): Pair<EquinoxSolsticeRequest, Calendar> {
+suspend fun findEquinoxSolstice(
+        request: EquinoxSolsticeRequest,
+        positionEphemeris: PositionEphemeris,
+        precision: Double = 0.1 / 24.0 / 3600.0
+): Pair<EquinoxSolsticeRequest, Calendar> {
 
     val sunCoordinates: suspend (jt: JT) -> Vector = { _ -> RectangularVector() }
 
@@ -73,16 +75,18 @@ suspend fun findEquinoxSolstice(request: EquinoxSolsticeRequest,
     return request to Calendar.getInstance().applyMJD(mjd, true)
 }
 
-suspend fun findEquinoxSolstice(year: Int,
-                                positionEphemeris: PositionEphemeris,
-                                precision: Double = 0.1 / 24.0 / 3600.0): List<Pair<EquinoxSolsticeRequest, Calendar>> {
+suspend fun findEquinoxSolstice(
+        year: Int,
+        positionEphemeris: PositionEphemeris,
+        precision: Double = 0.1 / 24.0 / 3600.0
+): List<Pair<EquinoxSolsticeRequest, Calendar>> = coroutineScope {
     val requests = listOf(EquinoxSolsticeRequest.SpringEquinox(year),
             EquinoxSolsticeRequest.SummerSolstice(year),
             EquinoxSolsticeRequest.AutumnEquinox(year),
             EquinoxSolsticeRequest.WinterSolstice(year))
 
-    return Array(4) {
-        async(CommonPool) {
+    Array(4) {
+        async {
             findEquinoxSolstice(requests[it], positionEphemeris.copy(), precision)
         }
     }.map { yield(); it.await() }

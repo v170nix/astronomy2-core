@@ -1,6 +1,5 @@
 package net.arwix.astronomy2.core.ephemeris.precession
 
-import javafx.scene.chart.Axis
 import net.arwix.astronomy2.core.ARCSEC_TO_RAD
 import net.arwix.astronomy2.core.Equatorial
 import net.arwix.astronomy2.core.PI2
@@ -8,7 +7,6 @@ import net.arwix.astronomy2.core.vector.Matrix
 import net.arwix.astronomy2.core.vector.Matrix.Companion.AXIS_X
 import net.arwix.astronomy2.core.vector.Matrix.Companion.AXIS_Z
 import net.arwix.astronomy2.core.vector.RectangularVector
-import net.arwix.astronomy2.core.vector.Vector
 import kotlin.math.cos
 import kotlin.math.sin
 

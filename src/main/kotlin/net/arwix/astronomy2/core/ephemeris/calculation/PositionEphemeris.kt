@@ -22,30 +22,33 @@ class PositionEphemeris(
         it.elements = EclipticToEquatorialElements(elements.precessionElements.id, elements.precessionElements.jT)
     }
 
-    suspend fun setJT0(jt0: JT): PositionEphemeris {
-        val earth = async(CommonPool) { findEarthCoordinates(jt0) }
-        val earthPlus = async(CommonPool) { findEarthCoordinates(jt0 + 0.01 / JULIAN_DAYS_PER_CENTURY) }
+    suspend fun setJT0(jt0: JT): PositionEphemeris = coroutineScope {
+        val earth = async { findEarthCoordinates(jt0) }
+        val earthPlus = async { findEarthCoordinates(jt0 + 0.01 / JULIAN_DAYS_PER_CENTURY) }
         elements = EclipticToEquatorialElements(idPrecession, jt0)
         earthVelocity = (earthPlus.await() - earth.await()) / 0.01
-        return this
+        this@PositionEphemeris
     }
 
-    suspend fun createBodyOptions(jt0: JT, findBodyCoordinates: suspend (jt: JT) -> Vector): Options {
-        val body = async(CommonPool) { findBodyCoordinates(jt0) }
-        val bodyPlus = async(CommonPool) { findBodyCoordinates(jt0 + 0.01 / JULIAN_DAYS_PER_CENTURY) }
-        return Options(findBodyCoordinates, (bodyPlus.await() - body.await()) / 0.01)
+    suspend fun createBodyOptions(
+            jt0: JT,
+            findBodyCoordinates: suspend (jt: JT) -> Vector
+    ): Options = coroutineScope {
+        val body = async { findBodyCoordinates(jt0) }
+        val bodyPlus = async { findBodyCoordinates(jt0 + 0.01 / JULIAN_DAYS_PER_CENTURY) }
+        Options(findBodyCoordinates, (bodyPlus.await() - body.await()) / 0.01)
     }
 
     fun getEarthVelocity(): Vector = RectangularVector(earthVelocity)
     fun getElements() = elements
 
-    suspend fun getPosition(jt: JT, options: Options): Vector {
-        val body = async(CommonPool) { options.findBodyCoordinates(jt) }
-        val earth = async(CommonPool) { findEarthCoordinates(jt) }
+    suspend fun getPosition(jt: JT, options: Options): Vector = coroutineScope {
+        val body = async { options.findBodyCoordinates(jt) }
+        val earth = async { findEarthCoordinates(jt) }
         val geocentricBody = body.await() - earth.await()
         yield()
         val lightTime = geocentricBody.normalize() / C_Light
-        return elements.transformMatrix * (geocentricBody - (options.bodyVelocity - earthVelocity) * lightTime)
+        elements.transformMatrix * (geocentricBody - (options.bodyVelocity - earthVelocity) * lightTime)
     }
 
     data class Options(internal val findBodyCoordinates: suspend (jt: JT) -> Vector,
@@ -56,19 +59,20 @@ class PositionEphemeris(
 @Geocentric
 @Equatorial
 @Apparent
-suspend fun getPositionEphemeris(jT: JT,
-                                 elements: EclipticToEquatorialElements,
-                                 @Heliocentric
-                                 @Ecliptic
-                                 @J2000
-                                 findEarthCoordinates: suspend (jT: JT) -> Vector,
-                                 @Heliocentric
-                                 @Ecliptic
-                                 @J2000
-                                 findBodyCoordinates: suspend (jT: JT) -> Vector): Vector {
-
-    val body = async(CommonPool) { findBodyCoordinates(jT) }
-    val earth = async(CommonPool) { findEarthCoordinates(jT) }
+suspend fun getPositionEphemeris(
+        jT: JT,
+        elements: EclipticToEquatorialElements,
+        @Heliocentric
+        @Ecliptic
+        @J2000
+        findEarthCoordinates: suspend (jT: JT) -> Vector,
+        @Heliocentric
+        @Ecliptic
+        @J2000
+        findBodyCoordinates: suspend (jT: JT) -> Vector
+): Vector = coroutineScope {
+    val body = async { findBodyCoordinates(jT) }
+    val earth = async { findEarthCoordinates(jT) }
     val geocentricBody = body.await() - earth.await()
     yield()
     val lightTime = geocentricBody.normalize() / C_Light
@@ -76,16 +80,18 @@ suspend fun getPositionEphemeris(jT: JT,
     //  val earthVelocity = getSimonJ2000KeplerElements(ID_EARTH_KEPLER_ELEMENTS).getOrbitalPlane(jT).velocity
     val bodyVelocity = getBodyVelocity(body.await(), jT = jT, findCoordinates = findBodyCoordinates)
 
-    return elements.transformMatrix * (geocentricBody - (bodyVelocity - earthVelocity) * lightTime)
+    elements.transformMatrix * (geocentricBody - (bodyVelocity - earthVelocity) * lightTime)
 }
 
 @Heliocentric
 @Ecliptic
-private suspend fun getBodyVelocity(currentCoordinates: Vector, jT: JT, lightTime: Double = 0.01,
-                                    @Heliocentric
-                                    @Ecliptic
-                                    @J2000
-                                    findCoordinates: suspend (jT: JT) -> Vector): Vector {
+private suspend fun getBodyVelocity(
+        currentCoordinates: Vector, jT: JT, lightTime: Double = 0.01,
+        @Heliocentric
+        @Ecliptic
+        @J2000
+        findCoordinates: suspend (jT: JT) -> Vector
+): Vector {
     //  val body = findCoordinates(jT)
     val bodyPlus = findCoordinates(jT + lightTime / JULIAN_DAYS_PER_CENTURY)
     return (bodyPlus - currentCoordinates) / lightTime

@@ -1,7 +1,9 @@
 package net.arwix.astronomy2.core.math
 
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.coroutineScope
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -25,30 +27,30 @@ class SearchGoldenExtremum(private val a: Double,
     suspend fun getMax() = doMax(a, b)
     suspend fun getMin() = doMin(a, b)
 
-    private suspend fun doMax(a: Double, b: Double): Double {
-        var a = a
-        var b = b
+    private suspend fun doMax(initA: Double, initB: Double): Double = coroutineScope {
+        var a = initA
+        var b = initB
         var step = 0
         do {
             step++
             val d = (b - a) / GOLDEN_RATIO
             val x1 = b - d
             val x2 = a + d
-            val y1 = async(CommonPool) { function(x1) }
-            val y2 = async(CommonPool) { function(x2) }
+            val y1 = async { function(x1) }
+            val y2 = async { function(x2) }
             if (y1.await() <= y2.await()) {
                 a = x1
             } else {
                 b = x2
             }
         } while (abs(a - b) > e && step < maxSteps)
-        return (a + b) / 2.0
+        (a + b) / 2.0
     }
 
 
-    private suspend fun doMin(a: Double, b: Double): Double {
-        var a = a
-        var b = b
+    private suspend fun doMin(initA: Double, initB: Double): Double = coroutineScope {
+        var a = initA
+        var b = initB
         var step = 0
         do {
             step++
@@ -63,7 +65,7 @@ class SearchGoldenExtremum(private val a: Double,
                 b = x2
             }
         } while (abs(a - b) > e && step < maxSteps)
-        return (a + b) / 2.0
+        (a + b) / 2.0
     }
 
 }

@@ -1,7 +1,7 @@
 package net.arwix.astronomy2.core.ephemeris.calculation
 
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.coroutineScope
 import kotlinx.coroutines.experimental.yield
 import net.arwix.astronomy2.core.*
 import net.arwix.astronomy2.core.calendar.*
@@ -28,7 +28,7 @@ suspend fun findCulmination(
         @Equatorial
         @Apparent
         findCoordinates: suspend (jT: JT) -> Vector
-): CulminationCalculationResult {
+): CulminationCalculationResult = coroutineScope {
 
     val innerCalendar = calendar.copy().resetTime()
     val deltaT = innerCalendar.getDeltaT(TimeUnit.DAYS)
@@ -43,20 +43,20 @@ suspend fun findCulmination(
         getSinAltitude(MJD0 + x / 24.0, deltaT, longitude, cosLatitude, sinLatitude, findCoordinates)
     }
 
-    val maxHours = async(CommonPool) { searchGoldenExtremum.getMax() }
-    val minHours = async(CommonPool) { searchGoldenExtremum.getMin() }
+    val maxHours = async { searchGoldenExtremum.getMax() }
+    val minHours = async { searchGoldenExtremum.getMin() }
 
     val upperCalendar = innerCalendar.copy().setHours(maxHours.await())
     val lowerCalendar = innerCalendar.copy().setHours(minHours.await())
-    val upperIsAbove = async(CommonPool) {
+    val upperIsAbove = async {
         getSinAltitude(upperCalendar.getMJD(), deltaT, longitude, cosLatitude, sinLatitude, findCoordinates)
     }
 
-    val lowerIsAbove = async(CommonPool) {
+    val lowerIsAbove = async {
         getSinAltitude(lowerCalendar.getMJD(), deltaT, longitude, cosLatitude, sinLatitude, findCoordinates)
     }
 
-    return CulminationCalculationResult.UpperLower(
+    CulminationCalculationResult.UpperLower(
             CulminationCalculationResult.Upper( upperIsAbove.await() > 0.0, upperCalendar),
             CulminationCalculationResult.Lower( lowerIsAbove.await() > 0.0, lowerCalendar)
     )

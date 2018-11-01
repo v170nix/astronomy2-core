@@ -1,8 +1,8 @@
 package net.arwix.astronomy2.core.ephemeris.calculation
 
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.coroutineScope
-import kotlinx.coroutines.experimental.yield
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.yield
 import net.arwix.astronomy2.core.*
 import net.arwix.astronomy2.core.calendar.*
 import net.arwix.astronomy2.core.vector.RectangularVector

@@ -1,6 +1,6 @@
 package net.arwix.astronomy2.core.ephemeris
 
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import net.arwix.astronomy2.core.RAD_TO_DEG
 import net.arwix.astronomy2.core.calendar.getJT
 import net.arwix.astronomy2.core.calendar.getMJD
@@ -30,27 +30,27 @@ internal class PositionEphemerisTest {
 //        val precessionElements = createPrecessionElements(ID_PRECESSION_VONDRAK_2011, jt)
 //        val elements = EclipticToEquatorialElements(ID_PRECESSION_IAU_2006, jt0)
 
-        val cE = createSuspendedVsop87ACoordinates(ID_VSOP87_EARTH)
-        val cB = createSuspendedVsop87ACoordinates(ID_VSOP87_MARS)
-        runBlocking {
-            val positionEphemeris = PositionEphemeris(ID_PRECESSION_IAU_2006, cE)
-            positionEphemeris.setJT0(jt0)
-            val options = positionEphemeris.createBodyOptions(jt0, cB)
-//            var l = getPositionEphemeris(jt,
-//                    elements,
-//                    cE,
-//                    cB)
-//            var r = positionEphemeris.getPosition(jt0, PositionEphemeris.RequestOptions(true),
-//                    cB)
-            val l = positionEphemeris.getPosition(jt, options)
-
-//            l = r.position
-
-            val p = convert<SphericalVector>(l)
-            System.out.println(printLong(p))
-            System.out.println(printLat(p))
-            System.out.println(printR(p))
-        }
+//        val cE = createSuspendedVsop87ACoordinates(ID_VSOP87_EARTH)
+//        val cB = createSuspendedVsop87ACoordinates(ID_VSOP87_MARS)
+//        runBlocking {
+//            val positionEphemeris = PositionEphemeris(ID_PRECESSION_IAU_2006, cE)
+//            positionEphemeris.setJT0(jt0)
+//            val options = positionEphemeris.createBodyOptions(jt0, cB)
+////            var l = getPositionEphemeris(jt,
+////                    elements,
+////                    cE,
+////                    cB)
+////            var r = positionEphemeris.getPosition(jt0, PositionEphemeris.RequestOptions(true),
+////                    cB)
+//            val l = positionEphemeris.getPosition(jt, options)
+//
+////            l = r.position
+//
+//            val p = convert<SphericalVector>(l)
+//            System.out.println(printLong(p))
+//            System.out.println(printLat(p))
+//            System.out.println(printR(p))
+//        }
 
 //        val cE1 = createMo(ID_VSOP87_EARTH)
 //        val cB1 = createSuspendedVsop87ACoordinates(ID_VSOP87_JUPITER)

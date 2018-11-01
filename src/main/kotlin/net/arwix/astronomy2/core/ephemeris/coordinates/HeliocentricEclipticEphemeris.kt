@@ -1,6 +1,6 @@
 package net.arwix.astronomy2.core.ephemeris.coordinates
 
-import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.CoroutineScope
 import net.arwix.astronomy2.core.Ecliptic
 import net.arwix.astronomy2.core.Heliocentric
 import net.arwix.astronomy2.core.JT

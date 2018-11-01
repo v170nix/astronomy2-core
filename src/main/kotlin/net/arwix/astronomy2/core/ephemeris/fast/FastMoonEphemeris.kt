@@ -1,6 +1,6 @@
 package net.arwix.astronomy2.core.ephemeris.fast
 
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.async
 import net.arwix.astronomy2.core.*
 import net.arwix.astronomy2.core.ephemeris.coordinates.createSuspendGeocentricEclipticCoordinates
 import net.arwix.astronomy2.core.math.*
@@ -105,7 +105,7 @@ fun createSuspendedFastMoonGeocentricEclipticApparentEphemeris(): createSuspendG
 
         val meanLunarLongitude = getMeanLunarLongitude(t) // L`
 
-        val longitude = async() {
+        val longitude = async {
             val venus: Degree = 3958.0 / 1000000.0 * sin((119.75 + t * 131.849) * DEG_TO_RAD)
             val jupiter: Degree = 318.0 / 1000000.0 * sin((53.09 + t * 479264.29) * DEG_TO_RAD)
             val nutation: Radian = getNutation(t)

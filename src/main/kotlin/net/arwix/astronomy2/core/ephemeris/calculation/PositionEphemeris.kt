@@ -1,6 +1,8 @@
 package net.arwix.astronomy2.core.ephemeris.calculation
 
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.yield
 import net.arwix.astronomy2.core.*
 import net.arwix.astronomy2.core.ephemeris.EclipticToEquatorialElements
 import net.arwix.astronomy2.core.ephemeris.precession.IdPrecession

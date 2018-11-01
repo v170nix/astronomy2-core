@@ -1,9 +1,8 @@
 package net.arwix.astronomy2.core.math
 
 
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.coroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlin.math.abs
 import kotlin.math.sqrt
 

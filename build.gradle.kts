@@ -74,7 +74,7 @@ dependencies {
 }
 
 kotlin {
-    experimental.coroutines = Coroutines.ENABLE
+//    experimental.coroutines = Coroutines.ENABLE
 }
 
 tasks {

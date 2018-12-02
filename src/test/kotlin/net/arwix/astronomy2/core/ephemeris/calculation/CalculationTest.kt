@@ -9,11 +9,14 @@ import net.arwix.astronomy2.core.ephemeris.fast.createFastSunGeocentricEclipticA
 import net.arwix.astronomy2.core.ephemeris.obliquity.ID_OBLIQUITY_SIMON_1994
 import net.arwix.astronomy2.core.ephemeris.obliquity.getObliquityMatrix
 import net.arwix.astronomy2.core.ephemeris.precession.ID_PRECESSION_IAU_1976
+import net.arwix.astronomy2.core.ephemeris.precession.ID_PRECESSION_VONDRAK_2011
 import net.arwix.astronomy2.ephemeris.vsop87a.ID_VSOP87_EARTH
 import net.arwix.astronomy2.ephemeris.vsop87a.ID_VSOP87_SUN
 import net.arwix.astronomy2.ephemeris.vsop87a.createSuspendedVsop87ACoordinates
+import net.arwix.astronomy2.ephemeris.vsop87a.createVsop87ACoordinates
 
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
@@ -29,22 +32,22 @@ internal class CalculationTest {
         val calendar = data.getCalendar()
         val jt0 = calendar.getJT()
 
-//        val earthCoordinates = createSuspendedVsop87ACoordinates(ID_VSOP87_EARTH)
-//        val sunCoordinates = createSuspendedVsop87ACoordinates(ID_VSOP87_SUN)
-//
-//        runBlocking {
-//            val ephemeris = PositionEphemeris(ID_PRECESSION_IAU_1976, earthCoordinates)
-//                    .setJT0(jt0)
-//            val options = ephemeris.createBodyOptions(jt0, sunCoordinates)
-//            val result =findRiseSet(ObjectType.SUN,
-//                    calendar,
-//                    data.getRadLatitude(),
-//                    data.getRadLongitude())
-//            { jt ->
-//                ephemeris.getPosition(jt, options)
-//            }
-//            riseSetCheck(data, result)
-//        }
+        val earthCoordinates = createSuspendedVsop87ACoordinates(ID_VSOP87_EARTH)
+        val sunCoordinates = createSuspendedVsop87ACoordinates(ID_VSOP87_SUN)
+
+        runBlocking {
+            val ephemeris = PositionEphemeris(ID_PRECESSION_IAU_1976) { earthCoordinates(this, it) }
+                    .setJT0(jt0)
+            val options = ephemeris.createBodyOptions(jt0) { sunCoordinates(this, it) }
+            val result = findRiseSet(ObjectType.SUN,
+                    calendar,
+                    data.getRadLatitude(),
+                    data.getRadLongitude())
+            { jt ->
+                ephemeris.getPosition(jt, options)
+            }
+            riseSetCheck(data, result)
+        }
     }
 
     @ParameterizedTest
@@ -56,7 +59,7 @@ internal class CalculationTest {
         val obliquity = getObliquityMatrix(ID_OBLIQUITY_SIMON_1994, calendar.getJT())
 
         runBlocking {
-            val result =findRiseSet(ObjectType.SUN,
+            val result = findRiseSet(ObjectType.SUN,
                     calendar,
                     data.getRadLatitude(),
                     data.getRadLongitude())
@@ -75,7 +78,7 @@ internal class CalculationTest {
 
         runBlocking {
             val moonCoordinates = createSuspendedFastMoonGeocentricEclipticApparentEphemeris()
-            val result =findRiseSet(ObjectType.MOON,
+            val result = findRiseSet(ObjectType.MOON,
                     calendar,
                     data.getRadLatitude(),
                     data.getRadLongitude())
@@ -83,6 +86,26 @@ internal class CalculationTest {
 
             riseSetCheck(data, result)
         }
+    }
+
+    @Test
+    fun `EquinoxSolstice`() {
+        val getCoordinates = createSuspendedVsop87ACoordinates(ID_VSOP87_EARTH)
+        val formatter = SimpleDateFormat("yyy-MM-dd HH:mm").apply {
+            timeZone = TimeZone.getTimeZone("UTC")
+        }
+        assertArrayEquals(
+                arrayOf("2018-03-20 16:15",
+                        "2018-06-21 10:07",
+                        "2018-09-23 01:54",
+                        "2018-12-21 22:22"),
+                runBlocking {
+                    val elements = PositionEphemeris(ID_PRECESSION_VONDRAK_2011) {
+                        getCoordinates(it)
+                    }
+                    findEquinoxSolstice(2018, elements)
+                }.map { formatter.format(it.second.time) }.toTypedArray()
+        )
     }
 
     private fun riseSetCheck(data: RiseSetData, result: RiseSetCalculationResult) {

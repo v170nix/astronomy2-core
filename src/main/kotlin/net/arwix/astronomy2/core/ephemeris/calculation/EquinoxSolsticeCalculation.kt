@@ -1,5 +1,6 @@
 package net.arwix.astronomy2.core.ephemeris.calculation
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.yield
@@ -45,7 +46,7 @@ suspend fun findEquinoxSolstice(
         precision: Double = 0.1 / 24.0 / 3600.0
 ): Pair<EquinoxSolsticeRequest, Calendar> {
 
-    val sunCoordinates: suspend (jt: JT) -> Vector = { _ -> RectangularVector() }
+    val sunCoordinates: suspend (jt: JT) -> Vector = { RectangularVector() }
 
     var mjd = Calendar.getInstance()
             .dayOfMonth(1)

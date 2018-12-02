@@ -1,5 +1,6 @@
 package net.arwix.astronomy2.core.ephemeris.calculation
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.yield
@@ -20,8 +21,10 @@ class PositionEphemeris(
     private lateinit var elements: EclipticToEquatorialElements
 
     fun copy() = PositionEphemeris(idPrecession, findEarthCoordinates).also {
-        it.earthVelocity = RectangularVector(earthVelocity)
-        it.elements = EclipticToEquatorialElements(elements.precessionElements.id, elements.precessionElements.jT)
+        if (::earthVelocity.isInitialized)
+            it.earthVelocity = RectangularVector(earthVelocity)
+        if (::elements.isInitialized)
+            it.elements = EclipticToEquatorialElements(elements.precessionElements.id, elements.precessionElements.jT)
     }
 
     suspend fun setJT0(jt0: JT): PositionEphemeris = coroutineScope {
@@ -34,7 +37,7 @@ class PositionEphemeris(
 
     suspend fun createBodyOptions(
             jt0: JT,
-            findBodyCoordinates: suspend (jt: JT) -> Vector
+            findBodyCoordinates: suspend (jT: JT) -> Vector
     ): Options = coroutineScope {
         val body = async { findBodyCoordinates(jt0) }
         val bodyPlus = async { findBodyCoordinates(jt0 + 0.01 / JULIAN_DAYS_PER_CENTURY) }

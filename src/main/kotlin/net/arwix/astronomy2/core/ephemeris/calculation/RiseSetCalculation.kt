@@ -34,6 +34,17 @@ suspend fun findRiseSet(
         @Geocentric
         @Equatorial
         @Apparent
+        findCoordinates: suspend (jT: JT) -> Vector) =
+        findRiseSet(objectType.sinRefractionAngle, calendar, latitude, longitude, findCoordinates)
+
+suspend fun findRiseSet(
+        sinRefractionAngle: Radian,
+        calendar: Calendar,
+        latitude: Radian,
+        longitude: Radian,
+        @Geocentric
+        @Equatorial
+        @Apparent
         findCoordinates: suspend (jT: JT) -> Vector
 ): RiseSetCalculationResult = coroutineScope {
 
@@ -53,7 +64,7 @@ suspend fun findRiseSet(
             deltaT,
             longitude,
             cosLatitude, sinLatitude,
-            findCoordinates) - objectType.sinRefractionAngle
+            findCoordinates) - sinRefractionAngle
 
     var rise: RiseSetCalculationResult.Rise? = null
     var set: RiseSetCalculationResult.Set? = null
@@ -65,7 +76,7 @@ suspend fun findRiseSet(
                     longitude,
                     cosLatitude,
                     sinLatitude,
-                    findCoordinates) - objectType.sinRefractionAngle
+                    findCoordinates) - sinRefractionAngle
         }
 
         val defferedY1 = async {
@@ -74,7 +85,7 @@ suspend fun findRiseSet(
                     longitude,
                     cosLatitude,
                     sinLatitude,
-                    findCoordinates) - objectType.sinRefractionAngle
+                    findCoordinates) - sinRefractionAngle
         }
 
         y0 = defferedY0.await()

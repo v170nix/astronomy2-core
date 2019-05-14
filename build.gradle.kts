@@ -18,7 +18,7 @@ import org.gradle.api.tasks.bundling.Jar
 import org.jetbrains.kotlin.gradle.dsl.Coroutines
 
 plugins {
-    kotlin("jvm") version "1.3.10"
+    kotlin("jvm") version "1.3.31"
     id("com.github.johnrengelman.shadow") version "4.0.3"
 //    id("java")
     `maven-publish`
@@ -27,7 +27,7 @@ plugins {
 
 group = "net.arwix.astronomy2"
 val artifactID = "astronomy-core"
-version = "0.7.0"
+version = "0.8.0"
 
 setProperty("targetCompatibility", JavaVersion.VERSION_1_6)
 setProperty("sourceCompatibility", JavaVersion.VERSION_1_6)
@@ -70,7 +70,7 @@ dependencies {
     testCompile("org.junit.jupiter:junit-jupiter-api:5.2.0")
     testCompile("org.junit.jupiter:junit-jupiter-params:5.2.0")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:5.2.0")
-    testCompile("net.arwix.astronomy2:ephemeris-vsop87a:0.5.0")
+    testCompile("net.arwix.astronomy2:ephemeris-vsop87a:0.7.0")
 }
 
 kotlin {

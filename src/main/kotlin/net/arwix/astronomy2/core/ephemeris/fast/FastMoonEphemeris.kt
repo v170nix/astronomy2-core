@@ -1,17 +1,22 @@
 package net.arwix.astronomy2.core.ephemeris.fast
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import net.arwix.astronomy2.core.*
-import net.arwix.astronomy2.core.ephemeris.coordinates.createSuspendGeocentricEclipticCoordinates
-import net.arwix.astronomy2.core.math.*
+import net.arwix.astronomy2.core.math.normalizeDegree
+import net.arwix.astronomy2.core.math.polynomialSum
 import net.arwix.astronomy2.core.vector.SphericalVector
+import net.arwix.astronomy2.core.vector.Vector
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
 
-@Geocentric @Ecliptic @Apparent
-fun createMoonGeocentricEclipticApparentLongitudeEphemeris(t: JT): Radian {
+@Geocentric
+@Ecliptic
+@Apparent
+fun createEphemerisFastMoonGeocentricEclipticApparentLongitude(t: JT): Radian {
 
     val solarAnomaly = getSolarAnomaly(t) //M
     val lunarElongation = getLunarElongation(t) //D
@@ -40,8 +45,10 @@ fun createMoonGeocentricEclipticApparentLongitudeEphemeris(t: JT): Radian {
     return (meanLunarLongitude + correctionLongitude + venus + jupiter + flatEarth + nutation * RAD_TO_DEG) * DEG_TO_RAD
 }
 
-@Geocentric @Ecliptic @Apparent
-fun createFastMoonGeocentricEclipticApparentLatitudeEphemeris(t: JT): Radian {
+@Geocentric
+@Ecliptic
+@Apparent
+fun createEphemerisFastMoonGeocentricEclipticApparentLatitude(t: JT): Radian {
 
     val solarAnomaly = getSolarAnomaly(t) //M
     val lunarElongation = getLunarElongation(t) //D
@@ -69,8 +76,10 @@ fun createFastMoonGeocentricEclipticApparentLatitudeEphemeris(t: JT): Radian {
 }
 
 
-@Geocentric @Ecliptic @Apparent
-fun createFastMoonGeocentricApparentDistanceEphemeris(t: JT): Double {
+@Geocentric
+@Ecliptic
+@Apparent
+fun createEphemerisFastMoonGeocentricApparentDistance(t: JT): Double {
 
     val solarAnomaly = getSolarAnomaly(t) //M
     val lunarElongation = getLunarElongation(t) //D
@@ -91,10 +100,11 @@ fun createFastMoonGeocentricApparentDistanceEphemeris(t: JT): Double {
     return (385000560 + correction) / 1000.0 / AU
 }
 
-@Geocentric @Ecliptic
-fun createSuspendedFastMoonGeocentricEclipticApparentEphemeris(): createSuspendGeocentricEclipticCoordinates =
+@Geocentric
+@Ecliptic
+@Apparent
+fun CoroutineScope.createEphemerisFastMoonGeocentricEclipticApparent(): suspend (jT: JT) -> Vector =
     { t: Double ->
-
         val solarAnomaly = getSolarAnomaly(t) //M
         val lunarElongation = getLunarElongation(t) //D
         val lunarAnomaly = getLunarAnomaly(t) //ML
@@ -105,7 +115,7 @@ fun createSuspendedFastMoonGeocentricEclipticApparentEphemeris(): createSuspendG
 
         val meanLunarLongitude = getMeanLunarLongitude(t) // L`
 
-        val longitude = async {
+        val longitude = async(Dispatchers.Default) {
             val venus: Degree = 3958.0 / 1000000.0 * sin((119.75 + t * 131.849) * DEG_TO_RAD)
             val jupiter: Degree = 318.0 / 1000000.0 * sin((53.09 + t * 479264.29) * DEG_TO_RAD)
             val nutation: Radian = getNutation(t)
@@ -123,7 +133,7 @@ fun createSuspendedFastMoonGeocentricEclipticApparentEphemeris(): createSuspendG
             (meanLunarLongitude + correctionLongitude + venus + jupiter + flatEarth + nutation * RAD_TO_DEG) * DEG_TO_RAD
         }
 
-        val latitude = async {
+        val latitude = async(Dispatchers.Default) {
             val venusLat: Degree = 175.0 / 1000000.0 * sin((119.75 + t * 131.849) * DEG_TO_RAD)
             val flatEarthLat: Degree = (1962.0 / 1000000.0 * sin((meanLunarLongitude - ascendingNode) * DEG_TO_RAD))
             val lat0: Degree = sinLat.foldIndexed(0.0) { index: Int, acc: Double, v: Double ->
@@ -139,7 +149,7 @@ fun createSuspendedFastMoonGeocentricEclipticApparentEphemeris(): createSuspendG
             lat * DEG_TO_RAD
         }
 
-        val distance = async {
+        val distance = async(Dispatchers.Default) {
             val correction =
                     cosLng.foldIndexed(0.0) { index: Int, acc: Double, v: Double ->
                         val w = dLng[index]

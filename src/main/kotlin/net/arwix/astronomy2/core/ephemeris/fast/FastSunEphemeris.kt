@@ -1,17 +1,19 @@
 package net.arwix.astronomy2.core.ephemeris.fast
 
 import net.arwix.astronomy2.core.*
-import net.arwix.astronomy2.core.ephemeris.coordinates.createGeocentricEclipticCoordinates
 import net.arwix.astronomy2.core.kepler.ID_EARTH_KEPLER_ELEMENTS
 import net.arwix.astronomy2.core.kepler.getSimonJ2000KeplerElements
 import net.arwix.astronomy2.core.math.normalizeDegree
 import net.arwix.astronomy2.core.math.toRad
 import net.arwix.astronomy2.core.vector.SphericalVector
+import net.arwix.astronomy2.core.vector.Vector
 import kotlin.math.cos
 import kotlin.math.sin
 
-@Geocentric @Ecliptic @Apparent
-fun createFastSunGeocentricEclipticApparentEphemeris(): createGeocentricEclipticCoordinates {
+@Geocentric
+@Ecliptic
+@Apparent
+fun createEphemerisSunFastGeocentricEclipticApparent(): (jT: JT) -> Vector {
     return { jT ->
         val aberration = (0.0000974 * cos((177.63 + 35999.01848 * jT) * DEG_TO_RAD) - 0.005575).normalizeDegree() * DEG_TO_RAD
         val longitude = (282.7771834

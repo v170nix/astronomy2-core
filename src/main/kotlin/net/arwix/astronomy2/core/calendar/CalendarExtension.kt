@@ -3,7 +3,6 @@ package net.arwix.astronomy2.core.calendar
 import net.arwix.astronomy2.core.JT
 import net.arwix.astronomy2.core.MJD
 import net.arwix.astronomy2.core.SECS_IN_DAY
-import sun.util.calendar.JulianCalendar
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -36,7 +35,10 @@ fun Calendar.applyMJD(mjd: MJD, applyDeltaT: Boolean = false): Calendar {
 fun Calendar.getJT(applyDeltaT: Boolean = false): JT =
         getJT(getMJD() + if (applyDeltaT) getDeltaT(TimeUnit.DAYS) else 0.0)
 
-fun MJD.toCalendar(applyDeltaT: Boolean = false) = fromMJDToCalendar(this, Calendar.getInstance(), applyDeltaT)
+fun MJD.toCalendar(applyDeltaT: Boolean = false, timeZone: TimeZone = TimeZone.getTimeZone("UTC")) =
+        Calendar.getInstance(timeZone).apply {
+            fromMJDToCalendar(this@toCalendar, this, applyDeltaT)
+        }
 
 fun Calendar.year() = get(Calendar.YEAR)
 fun Calendar.month() = get(Calendar.MONTH)

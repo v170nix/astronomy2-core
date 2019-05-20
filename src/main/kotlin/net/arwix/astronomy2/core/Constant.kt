@@ -54,6 +54,22 @@ const val JD_2000 = 2451545.0
 const val TROPICAL_YEAR = 365.242198781
 
 
+/** Hours in one day as a double.  */
+const val HOURS_PER_DAY = 24.0
+
+/** Minutes in one hour as a double.  */
+const val MINUTES_PER_HOUR = 60.0
+
+/** Seconds in one minute.  */
+const val SECONDS_PER_MINUTE = 60.0
+
+/** Seconds in one hour.  */
+const val SECONDS_PER_HOUR = MINUTES_PER_HOUR * SECONDS_PER_MINUTE
+
+/** Seconds in one day.  */
+const val SECONDS_PER_DAY = HOURS_PER_DAY * SECONDS_PER_HOUR
+
+
 const val SECS_IN_DAY = 86400.0 // колличество секунд в сутках
 
 /** Earth orbit mean rate in rad/day (Gauss Gravitational constant). kGauss */

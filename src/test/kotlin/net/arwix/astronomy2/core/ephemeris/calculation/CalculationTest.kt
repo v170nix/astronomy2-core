@@ -4,8 +4,8 @@ import kotlinx.coroutines.runBlocking
 import net.arwix.astronomy2.core.DEG_TO_RAD
 import net.arwix.astronomy2.core.Degree
 import net.arwix.astronomy2.core.calendar.*
-import net.arwix.astronomy2.core.ephemeris.fast.createSuspendedFastMoonGeocentricEclipticApparentEphemeris
-import net.arwix.astronomy2.core.ephemeris.fast.createFastSunGeocentricEclipticApparentEphemeris
+import net.arwix.astronomy2.core.ephemeris.fast.createEphemerisFastMoonGeocentricEclipticApparent
+import net.arwix.astronomy2.core.ephemeris.fast.createEphemerisFastSunGeocentricEclipticApparent
 import net.arwix.astronomy2.core.ephemeris.obliquity.ID_OBLIQUITY_SIMON_1994
 import net.arwix.astronomy2.core.ephemeris.obliquity.getObliquityMatrix
 import net.arwix.astronomy2.core.ephemeris.precession.ID_PRECESSION_IAU_1976
@@ -13,9 +13,8 @@ import net.arwix.astronomy2.core.ephemeris.precession.ID_PRECESSION_VONDRAK_2011
 import net.arwix.astronomy2.ephemeris.vsop87a.ID_VSOP87_EARTH
 import net.arwix.astronomy2.ephemeris.vsop87a.ID_VSOP87_SUN
 import net.arwix.astronomy2.ephemeris.vsop87a.createSuspendedVsop87ACoordinates
-import net.arwix.astronomy2.ephemeris.vsop87a.createVsop87ACoordinates
-
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertArrayEquals
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.params.ParameterizedTest
@@ -55,7 +54,7 @@ internal class CalculationTest {
     fun `RiseSetSunFast`(data: RiseSetData) {
         val calendar = data.getCalendar()
 
-        val sunCoordinates = createFastSunGeocentricEclipticApparentEphemeris()
+        val sunCoordinates = createEphemerisFastSunGeocentricEclipticApparent()
         val obliquity = getObliquityMatrix(ID_OBLIQUITY_SIMON_1994, calendar.getJT())
 
         runBlocking {
@@ -77,7 +76,7 @@ internal class CalculationTest {
         val obliquity = getObliquityMatrix(ID_OBLIQUITY_SIMON_1994, calendar.getJT())
 
         runBlocking {
-            val moonCoordinates = createSuspendedFastMoonGeocentricEclipticApparentEphemeris()
+            val moonCoordinates = createEphemerisFastMoonGeocentricEclipticApparent()
             val result = findRiseSet(ObjectType.MOON,
                     calendar,
                     data.getRadLatitude(),

@@ -1,21 +1,8 @@
-import com.github.jengelman.gradle.plugins.shadow.ShadowApplicationPlugin
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.jfrog.bintray.gradle.BintrayExtension
-import com.jfrog.bintray.gradle.BintrayPlugin
-import org.gradle.api.internal.HasConvention
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.api.publish.maven.MavenPom
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URI
-
-import org.gradle.api.JavaVersion
-import org.gradle.api.Project
-import org.gradle.api.artifacts.PublishArtifact
-import org.gradle.api.artifacts.dsl.ArtifactHandler
-import org.gradle.api.publish.PublishingExtension
-import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.api.tasks.bundling.Jar
-import org.jetbrains.kotlin.gradle.dsl.Coroutines
 
 plugins {
     kotlin("jvm") version "1.3.31"

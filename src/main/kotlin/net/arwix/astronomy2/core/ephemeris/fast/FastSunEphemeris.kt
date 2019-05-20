@@ -13,7 +13,7 @@ import kotlin.math.sin
 @Geocentric
 @Ecliptic
 @Apparent
-fun createEphemerisSunFastGeocentricEclipticApparent(): (jT: JT) -> Vector {
+fun createEphemerisFastSunGeocentricEclipticApparent(): (jT: JT) -> Vector {
     return { jT ->
         val aberration = (0.0000974 * cos((177.63 + 35999.01848 * jT) * DEG_TO_RAD) - 0.005575).normalizeDegree() * DEG_TO_RAD
         val longitude = (282.7771834

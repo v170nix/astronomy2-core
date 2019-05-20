@@ -22,7 +22,7 @@ inline fun <reified T: Vector> convert(vector: Vector): T {
             sphericalVector.r = sqrt(XYSqr + vector.z * vector.z)
             // Азимут вектора
             sphericalVector.phi = if (vector.x == 0.0 && vector.y == 0.0) 0.0 else atan2(vector.y, vector.x)
-            if (sphericalVector.phi < 0.0) sphericalVector.phi += 2.0 * Math.PI
+            if (sphericalVector.phi < 0.0) sphericalVector.phi += 2.0 * PI
             // высота вектора
             val rho = sqrt(XYSqr)
             sphericalVector.theta = if (vector.z == 0.0 && rho == 0.0) 0.0 else atan2(vector.z, rho)

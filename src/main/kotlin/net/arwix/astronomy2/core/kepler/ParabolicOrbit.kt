@@ -5,6 +5,7 @@ import net.arwix.astronomy2.core.vector.RectangularVector
 import kotlin.math.abs
 import kotlin.math.sqrt
 
+@Suppress("LocalVariableName")
 object ParabolicOrbit {
 
     /**
@@ -48,8 +49,8 @@ object ParabolicOrbit {
         var c: Triple<Double, Double, Double>
         var fac = 0.5 * e
 
-        val k = sqrt(GM / (q * (1.0 + e)));
-        val tau = sqrt(GM) * (t - t0);
+        val k = sqrt(GM / (q * (1.0 + e)))
+        val tau = sqrt(GM) * (t - t0)
 
         do {
             ++i

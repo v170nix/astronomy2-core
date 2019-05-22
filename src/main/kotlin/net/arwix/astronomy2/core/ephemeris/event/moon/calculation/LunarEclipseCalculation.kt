@@ -140,8 +140,8 @@ class LunarEclipseCalculation(
         val sunEquatorialRadius = 696000.0
         val moonEquatorialRadius = 1737.4
 
-        val ephem_sun_angularRadius = getangularRadius(ephem_sun, sunEquatorialRadius / AU)
-        val ephem_moon_angularRadius = getangularRadius(ephem_moon, moonEquatorialRadius / AU)
+        val ephem_sun_angularRadius = getAngularRadius(ephem_sun, sunEquatorialRadius / AU)
+        val ephem_moon_angularRadius = getAngularRadius(ephem_moon, moonEquatorialRadius / AU)
 
 
         // The main calculation is to position the center of the Earth shadow
@@ -226,56 +226,59 @@ class LunarEclipseCalculation(
 
     }
 
-    /**
-     * Obtain angular distance between two spherical coordinates.
-     *
-     * @param loc1 Location object.
-     * @param loc2 Location object.
-     * @return The distance in radians, from 0 to PI.
-     */
-    fun getAngularDistance(loc1: SphericalVector, loc2: SphericalVector): Double {
-        val xyz1 = convert<RectangularVector>(SphericalVector(loc1.phi, loc1.theta, 1.0))
-        val xyz2 = convert<RectangularVector>(SphericalVector(loc2.phi, loc2.theta, 1.0))
+    companion object {
+
+        /**
+         * Obtain angular distance between two spherical coordinates.
+         *
+         * @param loc1 Location object.
+         * @param loc2 Location object.
+         * @return The distance in radians, from 0 to PI.
+         */
+        fun getAngularDistance(loc1: SphericalVector, loc2: SphericalVector): Double {
+            val xyz1 = convert<RectangularVector>(SphericalVector(loc1.phi, loc1.theta, 1.0))
+            val xyz2 = convert<RectangularVector>(SphericalVector(loc2.phi, loc2.theta, 1.0))
 
 //        (xyz1 - xyz2).normalize()
 
-        val dx = xyz1[0] - xyz2[0]
-        val dy = xyz1[1] - xyz2[1]
-        val dz = xyz1[2] - xyz2[2]
+            val dx = xyz1[0] - xyz2[0]
+            val dy = xyz1[1] - xyz2[1]
+            val dz = xyz1[2] - xyz2[2]
 
-        val r2 = dx * dx + dy * dy + dz * dz
+            val r2 = dx * dx + dy * dy + dz * dz
 
-        return Math.acos(1.0 - r2 * 0.5)
-        /*
+            return Math.acos(1.0 - r2 * 0.5)
+            /*
  		// Haversine formula
  		double dLat = loc1.lat - loc2.lat;
 		double dLon = loc1.lon - loc2.lon;
 		double a = sin(dLat/2) * sin(dLat/2) + cos(loc1.lat) * cos(loc2.lat) * sin(dLon/2) * sin(dLon/2);
 		return 2.0 * atan2(Math.sqrt(a), sqrt(1.0-a));
 */
-    }
+        }
 
-    /**
-     * Obtain exact position angle between two spherical coordinates. Performance will be poor.
-     *
-     * @param loc1 Location object.
-     * @param loc2 Location object.
-     * @return The position angle in radians.
-     */
-    fun getPositionAngle(loc1: SphericalVector, loc2: SphericalVector): Double {
-        val al = loc1.phi
-        val ap = loc1.theta
-        val bl = loc2.phi
-        val bp = loc2.theta
-        val dl = bl - al
-        val cbp = Math.cos(bp)
-        val y = Math.sin(dl) * cbp
-        val x = Math.sin(bp) * Math.cos(ap) - cbp * Math.sin(ap) * Math.cos(dl)
-        var pa = 0.0
-        if (x != 0.0 || y != 0.0) pa = -Math.atan2(y, x)
-        return pa
-    }
+        /**
+         * Obtain exact position angle between two spherical coordinates. Performance will be poor.
+         *
+         * @param loc1 Location object.
+         * @param loc2 Location object.
+         * @return The position angle in radians.
+         */
+        fun getPositionAngle(loc1: SphericalVector, loc2: SphericalVector): Double {
+            val al = loc1.phi
+            val ap = loc1.theta
+            val bl = loc2.phi
+            val bp = loc2.theta
+            val dl = bl - al
+            val cbp = Math.cos(bp)
+            val y = Math.sin(dl) * cbp
+            val x = Math.sin(bp) * Math.cos(ap) - cbp * Math.sin(ap) * Math.cos(dl)
+            var pa = 0.0
+            if (x != 0.0 || y != 0.0) pa = -Math.atan2(y, x)
+            return pa
+        }
 
-    fun getangularRadius(vector: SphericalVector, equatorialRadius: Double) = atan(equatorialRadius / vector.r)
+        fun getAngularRadius(vector: SphericalVector, equatorialRadius: Double) = atan(equatorialRadius / vector.r)
+    }
 
 }

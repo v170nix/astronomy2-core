@@ -4,6 +4,7 @@ import kotlinx.coroutines.runBlocking
 import net.arwix.astronomy2.core.DELTA_JD_MJD
 import net.arwix.astronomy2.core.JT
 import net.arwix.astronomy2.core.calendar.*
+import net.arwix.astronomy2.core.ephemeris.event.sun.calculation.SolarEclipseCalculation
 import net.arwix.astronomy2.core.ephemeris.fast.createEphemerisFastMoonGeocentricEclipticApparent
 import net.arwix.astronomy2.core.ephemeris.fast.createEphemerisFastSunGeocentricEclipticApparent
 import net.arwix.astronomy2.core.ephemeris.nutation.ID_NUTATION_IAU_1980
@@ -83,6 +84,29 @@ internal class LunarCalculationTest {
             cals.events.forEach {
                 println(((it - DELTA_JD_MJD).toCalendar(false, TimeZone.getTimeZone("UTC")) as Calendar).time)
             }
+
+        }
+    }
+
+    @Test
+    fun `testBE`() {
+        runBlocking {
+            //            val calendar = Calendar.getInstance().apply {
+//                year(2019)
+//                month(6)
+//                dayOfMonth(2)
+//                setHours(19.0)
+//                minute(0)
+//            }
+//            val mjd = getMJD(2019, 7, 2, 19, 0, 0, 0)
+            val mjd = 2459198.17700 - DELTA_JD_MJD
+            val moonEph = createEphemerisFastMoonGeocentricEclipticApparent()
+            val sunEph = createEphemerisFastSunGeocentricEclipticApparent()
+            val susSunEph: suspend (jt: JT) -> Vector = { sunEph(it) }
+            val cals = SolarEclipseCalculation(mjd, moonEph, susSunEph)
+
+            cals.init()
+
 
         }
     }

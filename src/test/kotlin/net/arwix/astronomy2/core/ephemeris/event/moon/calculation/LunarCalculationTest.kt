@@ -10,12 +10,15 @@ import net.arwix.astronomy2.core.ephemeris.fast.createEphemerisFastSunGeocentric
 import net.arwix.astronomy2.core.ephemeris.nutation.ID_NUTATION_IAU_1980
 import net.arwix.astronomy2.core.ephemeris.nutation.getNutationAngles
 import net.arwix.astronomy2.core.ephemeris.obliquity.ID_OBLIQUITY_SIMON_1994
+import net.arwix.astronomy2.core.ephemeris.obliquity.ID_OBLIQUITY_WILLIAMS_1994
+import net.arwix.astronomy2.core.ephemeris.obliquity.createObliquityElements
 import net.arwix.astronomy2.core.ephemeris.obliquity.getObliquityMatrix
 import net.arwix.astronomy2.core.math.toDeg
 import net.arwix.astronomy2.core.vector.Vector
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class LunarCalculationTest {
@@ -91,21 +94,32 @@ internal class LunarCalculationTest {
     @Test
     fun `testBE`() {
         runBlocking {
-            //            val calendar = Calendar.getInstance().apply {
-//                year(2019)
-//                month(6)
-//                dayOfMonth(2)
-//                setHours(19.0)
-//                minute(0)
-//            }
-//            val mjd = getMJD(2019, 7, 2, 19, 0, 0, 0)
-            val mjd = 2459198.17700 - DELTA_JD_MJD
-            val moonEph = createEphemerisFastMoonGeocentricEclipticApparent()
-            val sunEph = createEphemerisFastSunGeocentricEclipticApparent()
-            val susSunEph: suspend (jt: JT) -> Vector = { sunEph(it) }
+            val calendar = Calendar.getInstance().apply {
+                year(2017)
+                month(7)
+                dayOfMonth(21)
+                setHours(16.0 + 3)
+                minute(25)
+                second(30)
+            }
+            //                  val mjd = getMJD(2019, 7, 2, 19, 22, 53, 0) + getDeltaT(2019, 7, TimeUnit.DAYS)
+            //           val mjd = getMJD(2021, 12, 4, 7, 33, 22, 0) + getDeltaT(2021, 12, TimeUnit.DAYS)
+
+            val mjd = calendar.getMJD() + getDeltaT(2017, 6, TimeUnit.DAYS) //  2459552.814844 - DELTA_JD_MJD
+            val obl = createObliquityElements(ID_OBLIQUITY_WILLIAMS_1994, getJT(mjd))
+            val moonEcliptic = createEphemerisFastMoonGeocentricEclipticApparent()
+            val sunEcliptic = createEphemerisFastSunGeocentricEclipticApparent()
+
+            val moonEph: suspend (jt: JT) -> Vector = { obl.rotateEclipticVector(moonEcliptic(it)) }
+            val susSunEph: suspend (jt: JT) -> Vector = { obl.rotateEclipticVector(sunEcliptic(it)) }
             val cals = SolarEclipseCalculation(mjd, moonEph, susSunEph)
 
-            cals.init()
+            (0..(300 / 3)).forEach {
+                //                cals.init()
+
+                cals.intersect(mjd + it * 3 / 60.0 / 24.0)
+            }
+
 
 
         }

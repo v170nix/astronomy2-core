@@ -5,7 +5,6 @@ import java.lang.Math.pow
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
-import kotlin.math.floor
 
 /**
  * Среднее гринвичское звездное время
@@ -19,6 +18,10 @@ fun getGMST(mJD: MJD): Radian {
     val jT0 = (mJD0 - 51544.5) / 36525.0
     val jT = (mJD - 51544.5) / 36525.0
     val gmst = 24110.54841 + 8640184.812866 * jT0 + 1.0027379093 * uT + (0.093104 - 0.0000062 * jT) * jT * jT // [сек]
+//    var gmst0 = 6.697374558 + 0.06570982441908 * jT0 * 36525.0 + 1.00273790935 * uT / 60.0 / 60.0 + 0.000026 * jT * jT
+//    gmst0 = gmst0 * 60.0 * 60.0
+//    println("gmst=$gmst")
+//    println("gmst0=$gmst0")
     return PI2 / SECS_IN_DAY * (gmst % SECS_IN_DAY) // [рад]
 }
 

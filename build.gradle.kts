@@ -14,7 +14,7 @@ plugins {
 
 group = "net.arwix.astronomy2"
 val artifactID = "astronomy-core"
-version = "0.8.1"
+version = "0.8.2-b"
 
 setProperty("targetCompatibility", JavaVersion.VERSION_1_6)
 setProperty("sourceCompatibility", JavaVersion.VERSION_1_6)

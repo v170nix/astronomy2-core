@@ -35,7 +35,7 @@ fun Calendar.applyMJD(mjd: MJD, applyDeltaT: Boolean = false): Calendar {
 fun Calendar.getJT(applyDeltaT: Boolean = false): JT =
         getJT(getMJD() + if (applyDeltaT) getDeltaT(TimeUnit.DAYS) else 0.0)
 
-fun MJD.toCalendar(applyDeltaT: Boolean = false, timeZone: TimeZone = TimeZone.getTimeZone("UTC")) =
+fun MJD.toCalendar(applyDeltaT: Boolean = false, timeZone: TimeZone = TimeZone.getTimeZone("UTC")): Calendar =
         Calendar.getInstance(timeZone).apply {
             fromMJDToCalendar(this@toCalendar, this, applyDeltaT)
         }

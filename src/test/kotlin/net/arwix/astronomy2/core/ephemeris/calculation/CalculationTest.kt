@@ -1,13 +1,15 @@
 package net.arwix.astronomy2.core.ephemeris.calculation
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import net.arwix.astronomy2.core.DEG_TO_RAD
 import net.arwix.astronomy2.core.Degree
 import net.arwix.astronomy2.core.calendar.*
+import net.arwix.astronomy2.core.ephemeris.event.moon.calculation.LunarPhaseEclipseCalculation
 import net.arwix.astronomy2.core.ephemeris.fast.createEphemerisFastMoonGeocentricEclipticApparent
 import net.arwix.astronomy2.core.ephemeris.fast.createEphemerisFastSunGeocentricEclipticApparent
-import net.arwix.astronomy2.core.ephemeris.obliquity.ID_OBLIQUITY_SIMON_1994
-import net.arwix.astronomy2.core.ephemeris.obliquity.getObliquityMatrix
+import net.arwix.astronomy2.core.ephemeris.obliquity.createObliquityMatrix
 import net.arwix.astronomy2.core.ephemeris.precession.ID_PRECESSION_IAU_1976
 import net.arwix.astronomy2.core.ephemeris.precession.ID_PRECESSION_VONDRAK_2011
 import net.arwix.astronomy2.ephemeris.vsop87a.ID_VSOP87_EARTH
@@ -55,7 +57,8 @@ internal class CalculationTest {
         val calendar = data.getCalendar()
 
         val sunCoordinates = createEphemerisFastSunGeocentricEclipticApparent()
-        val obliquity = getObliquityMatrix(ID_OBLIQUITY_SIMON_1994, calendar.getJT())
+        calendar.getJT()
+        val obliquity = createObliquityMatrix
 
         runBlocking {
             val result = findRiseSet(ObjectType.SUN,
@@ -73,7 +76,8 @@ internal class CalculationTest {
     fun `RiseSetMoonFast`(data: RiseSetData) {
         val calendar = data.getCalendar()
 
-        val obliquity = getObliquityMatrix(ID_OBLIQUITY_SIMON_1994, calendar.getJT())
+        calendar.getJT()
+        val obliquity = createObliquityMatrix
 
         runBlocking {
             val moonCoordinates = createEphemerisFastMoonGeocentricEclipticApparent()
@@ -84,6 +88,28 @@ internal class CalculationTest {
             { jt -> obliquity * moonCoordinates(jt) }
 
             riseSetCheck(data, result)
+        }
+    }
+
+    @Test
+    fun `PhaseEclipse`() {
+        //TODO create test
+        runBlocking {
+            val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+                    .apply {
+                        year(2019)
+                        month(Calendar.JULY)
+                        dayOfMonth(1)
+                    }
+            val calc = LunarPhaseEclipseCalculation(calendar)
+            val result = withContext(Dispatchers.Default) {
+                calc.getPrevious(4, true)
+            }
+            result.forEach {
+                val date = it.mJdET.toCalendar(true, TimeZone.getDefault())
+//                println(date.time.toString())
+//                println(it)
+            }
         }
     }
 

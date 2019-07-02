@@ -5,7 +5,6 @@ import net.arwix.astronomy2.core.math.polynomialSum
 import net.arwix.astronomy2.core.vector.Matrix
 import net.arwix.astronomy2.core.vector.Matrix.Companion.AXIS_X
 import net.arwix.astronomy2.core.vector.Vector
-import kotlin.lazy
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -29,6 +28,9 @@ fun getObliquity(idObliquity: IdObliquity, t: JT): Obliquity = when (idObliquity
 }
 
 // ecliptic to equatorial
+fun createObliquityMatrix(idObliquity: IdObliquity, t: JT): Matrix = Matrix.getRotateX(-getObliquity(idObliquity, t))
+
+@Deprecated("use createObliquityMatrix", replaceWith = ReplaceWith("createObliquityMatrix"))
 fun getObliquityMatrix(idObliquity: IdObliquity, t: JT): Matrix = Matrix.getRotateX(-getObliquity(idObliquity, t))
 
 fun createObliquityElements(idObliquity: IdObliquity, t: JT): ObliquityElements = object : ObliquityElements {

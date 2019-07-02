@@ -1,6 +1,9 @@
 package net.arwix.astronomy2.core.ephemeris.event.moon.calculation
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.yield
 import net.arwix.astronomy2.core.DELTA_JD_MJD
 import net.arwix.astronomy2.core.JULIAN_DAYS_PER_CENTURY
 import net.arwix.astronomy2.core.SECONDS_PER_DAY
@@ -25,7 +28,7 @@ import kotlin.math.sqrt
  * Algorithms. Error is always below 2 minutes, and usually below 1 minute.
  */
 @Suppress("LocalVariableName", "MemberVisibilityCanBePrivate")
-class LunarPhaseEclipseCalculation(initialCalendar: Calendar, private val dispatcher: CoroutineDispatcher = Dispatchers.Default) {
+class LunarPhaseEclipseCalculation(initialCalendar: Calendar) {
 
     private val initK = getClosestK(12.3685 * with(initialCalendar) {
         year() - 2000.0 + (dayOfYear() + getHours() / 24.0) / getActualMaximum(Calendar.DAY_OF_YEAR)
@@ -41,7 +44,10 @@ class LunarPhaseEclipseCalculation(initialCalendar: Calendar, private val dispat
         ArrayList<MoonEvent>().apply {
             (0..count).map {
                 yield()
-                async(dispatcher) { getTruePhaseJd(initK + d * 0.25 * it, addEclipses) }
+                async {
+                    println(Thread.currentThread().name)
+                    getTruePhaseJd(initK + d * 0.25 * it, addEclipses)
+                }
             }.awaitAll().let(this::addAll)
         }
     }
@@ -260,7 +266,7 @@ class LunarPhaseEclipseCalculation(initialCalendar: Calendar, private val dispat
                 0.000023 * sin(A14)
 
         return MoonEvent(
-                timeCorrectionForSecularAcceleration(jd + deltaJd) - (jd + deltaJd) - DELTA_JD_MJD,
+                timeCorrectionForSecularAcceleration(jd + deltaJd) - DELTA_JD_MJD,
                 MoonPhase.getPhase(k),
                 eclipse)
     }

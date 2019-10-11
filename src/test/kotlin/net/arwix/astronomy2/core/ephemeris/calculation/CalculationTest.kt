@@ -9,6 +9,7 @@ import net.arwix.astronomy2.core.calendar.*
 import net.arwix.astronomy2.core.ephemeris.event.moon.calculation.LunarPhaseEclipseCalculation
 import net.arwix.astronomy2.core.ephemeris.fast.createEphemerisFastMoonGeocentricEclipticApparent
 import net.arwix.astronomy2.core.ephemeris.fast.createEphemerisFastSunGeocentricEclipticApparent
+import net.arwix.astronomy2.core.ephemeris.obliquity.ID_OBLIQUITY_SIMON_1994
 import net.arwix.astronomy2.core.ephemeris.obliquity.createObliquityMatrix
 import net.arwix.astronomy2.core.ephemeris.precession.ID_PRECESSION_IAU_1976
 import net.arwix.astronomy2.core.ephemeris.precession.ID_PRECESSION_VONDRAK_2011
@@ -57,8 +58,7 @@ internal class CalculationTest {
         val calendar = data.getCalendar()
 
         val sunCoordinates = createEphemerisFastSunGeocentricEclipticApparent()
-        calendar.getJT()
-        val obliquity = createObliquityMatrix
+        val obliquity = createObliquityMatrix(ID_OBLIQUITY_SIMON_1994, calendar.getJT())
 
         runBlocking {
             val result = findRiseSet(ObjectType.SUN,
@@ -76,8 +76,7 @@ internal class CalculationTest {
     fun `RiseSetMoonFast`(data: RiseSetData) {
         val calendar = data.getCalendar()
 
-        calendar.getJT()
-        val obliquity = createObliquityMatrix
+        val obliquity = createObliquityMatrix(ID_OBLIQUITY_SIMON_1994, calendar.getJT())
 
         runBlocking {
             val moonCoordinates = createEphemerisFastMoonGeocentricEclipticApparent()

@@ -5,16 +5,16 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URI
 
 plugins {
-    kotlin("jvm") version "1.3.50"
-    id("com.github.johnrengelman.shadow") version "4.0.3"
+    kotlin("jvm") version "1.3.61"
+    id("com.github.johnrengelman.shadow") version "5.2.0"
 //    id("java")
     `maven-publish`
-    id("com.jfrog.bintray") version "1.8.3"
+    id("com.jfrog.bintray") version "1.8.4"
 }
 
 group = "net.arwix.astronomy2"
 val artifactID = "astronomy-core"
-version = "0.8.3-c"
+version = "0.8.4-d"
 
 //setProperty("targetCompatibility", JavaVersion.VERSION_1_6)
 //setProperty("sourceCompatibility", JavaVersion.VERSION_1_6)
@@ -29,12 +29,14 @@ repositories {
 
 val shadowJar: ShadowJar by tasks
 shadowJar.apply {
+    //    archiveName = "archive$artifactID"
     baseName = artifactID
-    classifier = ""
+    classifier = "sources"
     dependsOn("classes")
     dependencies {
         exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib"))
         exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib-common"))
+        exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib-jdk7"))
         exclude(dependency("org.jetbrains.kotlinx:atomicfu-common"))
         exclude(dependency("org.jetbrains:annotations"))
         exclude(dependency("org.apiguardian:apiguardian-api"))
@@ -52,17 +54,18 @@ shadowJar.apply {
 //}
 
 dependencies {
-    compile(kotlin("stdlib"))
-    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2")
-    testCompile("org.junit.jupiter:junit-jupiter-api:5.2.0")
-    testCompile("org.junit.jupiter:junit-jupiter-params:5.2.0")
+    implementation(kotlin("stdlib-jdk7"))
+    implementation(kotlin("stdlib"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.2.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.2.0")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:5.2.0")
-    testCompile("net.arwix.astronomy2:ephemeris-vsop87a:0.7.0")
+    testImplementation("net.arwix.astronomy2:ephemeris-vsop87a:0.7.0")
 }
 
-kotlin {
-//    experimental.coroutines = Coroutines.ENABLE
-}
+//kotlin {
+////    experimental.coroutines = Coroutines.ENABLE
+//}
 
 tasks {
     withType<KotlinCompile> {
@@ -73,7 +76,8 @@ tasks {
         dependsOn(shadowJar)
     }
     withType<GenerateMavenPom> {
-        destination = file("$buildDir/libs/${shadowJar.archiveName}.pom")
+        //        val sh = shadowJar.get().ar
+        destination = file("$buildDir/libs/${shadowJar.get().archiveName}.pom")
     }
 }
 
@@ -97,21 +101,21 @@ bintray {
 }
 
 publishing {
-    publications.invoke {
-        "ProjectPublication"(MavenPublication::class) {
-//            from(components.getByName("java"))
+    (publications) {
+        register("ProjectPublication", MavenPublication::class) {
+            from(components.getByName("java"))
             groupId = project.group as String
             artifactId = artifactID
             artifact(shadowJar)
             version = project.version as String
-            pom.addDependencies()
+            //  pom.addDependencies()
         }
     }
 }
 
 fun MavenPom.addDependencies() = withXml {
     asNode().appendNode("dependencies").let { depNode ->
-        configurations.compile.allDependencies.forEach {
+        configurations.compile.get().allDependencies.forEach {
             depNode.appendNode("dependency").apply {
                 appendNode("groupId", it.group)
                 appendNode("artifactId", it.name)

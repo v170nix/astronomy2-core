@@ -19,15 +19,28 @@ sealed class CulminationCalculationResult {
 }
 
 suspend fun findCulmination(
+    objectType: ObjectType,
+    precision: Double,
+    calendar: Calendar,
+    latitude: Radian,
+    longitude: Radian,
+    @Geocentric
+    @Equatorial
+    @Apparent
+    findCoordinates: suspend (jT: JT) -> Vector
+): CulminationCalculationResult =
+    findCulmination(objectType.sinRefractionAngle, precision, calendar, latitude, longitude, findCoordinates)
+
+suspend fun findCulmination(
     sinRefractionAngle: Radian,
     precision: Double,
     calendar: Calendar,
     latitude: Radian,
     longitude: Radian,
     @Geocentric
-        @Equatorial
-        @Apparent
-        findCoordinates: suspend (jT: JT) -> Vector
+    @Equatorial
+    @Apparent
+    findCoordinates: suspend (jT: JT) -> Vector
 ): CulminationCalculationResult = coroutineScope {
 
     val innerCalendar = calendar.copy().resetTime()
@@ -37,8 +50,7 @@ suspend fun findCulmination(
     val cosLatitude = cos(latitude)
     val sinLatitude = sin(latitude)
 
-    val searchGoldenExtremum = SearchGoldenExtremum(0.0, 24.0, precision, 50) {
-        x ->
+    val searchGoldenExtremum = SearchGoldenExtremum(0.0, 24.0, precision, 50) { x ->
         yield()
         getSinAltitude(MJD0 + x / 24.0, deltaT, longitude, cosLatitude, sinLatitude, findCoordinates)
     }
@@ -71,8 +83,8 @@ suspend fun findCulmination(
     }
 
     CulminationCalculationResult.UpperLower(
-            CulminationCalculationResult.Upper( upperIsAbove.await() > 0.0, upperCalendar),
-            CulminationCalculationResult.Lower( lowerIsAbove.await() > 0.0, lowerCalendar)
+        CulminationCalculationResult.Upper(upperIsAbove.await() > 0.0, upperCalendar),
+        CulminationCalculationResult.Lower(lowerIsAbove.await() > 0.0, lowerCalendar)
     )
 
 }

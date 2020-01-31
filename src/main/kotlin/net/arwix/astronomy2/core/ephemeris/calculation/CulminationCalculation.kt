@@ -19,11 +19,12 @@ sealed class CulminationCalculationResult {
 }
 
 suspend fun findCulmination(
-        precision: Double,
-        calendar: Calendar,
-        latitude: Radian,
-        longitude: Radian,
-        @Geocentric
+    sinRefractionAngle: Radian,
+    precision: Double,
+    calendar: Calendar,
+    latitude: Radian,
+    longitude: Radian,
+    @Geocentric
         @Equatorial
         @Apparent
         findCoordinates: suspend (jT: JT) -> Vector
@@ -45,14 +46,28 @@ suspend fun findCulmination(
     val maxHours = async { searchGoldenExtremum.getMax() }
     val minHours = async { searchGoldenExtremum.getMin() }
 
-    val upperCalendar = innerCalendar.copy().setHours(maxHours.await())
-    val lowerCalendar = innerCalendar.copy().setHours(minHours.await())
+    val upperCalendar = innerCalendar.copy().addHours(maxHours.await())
+    val lowerCalendar = innerCalendar.copy().addHours(minHours.await())
     val upperIsAbove = async {
-        getSinAltitude(upperCalendar.getMJD(), deltaT, longitude, cosLatitude, sinLatitude, findCoordinates)
+        getSinAltitude(
+            upperCalendar.getMJD(),
+            deltaT,
+            longitude,
+            cosLatitude,
+            sinLatitude,
+            findCoordinates
+        ) - sinRefractionAngle
     }
 
     val lowerIsAbove = async {
-        getSinAltitude(lowerCalendar.getMJD(), deltaT, longitude, cosLatitude, sinLatitude, findCoordinates)
+        getSinAltitude(
+            lowerCalendar.getMJD(),
+            deltaT,
+            longitude,
+            cosLatitude,
+            sinLatitude,
+            findCoordinates
+        ) - sinRefractionAngle
     }
 
     CulminationCalculationResult.UpperLower(

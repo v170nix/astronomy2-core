@@ -5,6 +5,7 @@ import java.lang.Math.pow
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
+import kotlin.math.floor
 
 /**
  * Среднее гринвичское звездное время
@@ -159,7 +160,7 @@ fun fromMJDToCalendar(mjd: MJD, calendar: Calendar, applyDeltaT: Boolean = false
     val day = c - e - (30.6001 * f).toLong()
     val month = f - 1 - 12 * (f / 14)
     val year = d - 4715 - ((7 + month) / 10)
-    val hours = mjd - Math.floor(mjd) + calendar.zoneOffset() / SECS_IN_DAY / 1000.0
+    val hours = mjd - floor(mjd) + calendar.zoneOffset() / SECS_IN_DAY / 1000.0
     calendar.set(year.toInt(), month.toInt() - 1, day.toInt())
     calendar.setHours(hours * 24.0)
     val daylight = if (calendar.timeZone.inDaylightTime(calendar.time)) calendar.timeZone.dstSavings else 0

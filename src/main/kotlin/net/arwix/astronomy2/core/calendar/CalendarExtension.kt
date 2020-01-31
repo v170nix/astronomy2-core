@@ -117,4 +117,9 @@ fun Calendar.setHours(hours: Double): Calendar {
     return this
 }
 
+fun Calendar.addHours(hours: Double): Calendar {
+    add(Calendar.MILLISECOND, (hours * 60.0 * 60.0 * 1000.0).toInt())
+    return this
+}
+
 

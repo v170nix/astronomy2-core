@@ -49,6 +49,7 @@ suspend fun findRiseSet(
 ): RiseSetCalculationResult = coroutineScope {
 
     val innerCalendar = calendar.copy().resetTime()
+
     val deltaT = innerCalendar.getDeltaT(TimeUnit.DAYS)
     val MJD0 = innerCalendar.getMJD()
 
@@ -98,9 +99,9 @@ suspend fun findRiseSet(
         when (quadraticResult) {
             is QuadraticResult.Root -> {
                 if (yMinus < 0.0)
-                    rise = RiseSetCalculationResult.Rise(innerCalendar.copy().setHours(hour + quadraticResult.root))
+                    rise = RiseSetCalculationResult.Rise(innerCalendar.copy().addHours(hour + quadraticResult.root))
                 else
-                    set = RiseSetCalculationResult.Set(innerCalendar.copy().setHours(hour + quadraticResult.root))
+                    set = RiseSetCalculationResult.Set(innerCalendar.copy().addHours(hour + quadraticResult.root))
             }
             is QuadraticResult.Roots -> {
                 val (LT_Rise, LT_Set) = if (quadraticResult.extremum.y < 0.0)
@@ -108,8 +109,8 @@ suspend fun findRiseSet(
                     Pair(hour + quadraticResult.root1, hour + quadraticResult.root2)
 
                 return@coroutineScope RiseSetCalculationResult.RiseSet(
-                        RiseSetCalculationResult.Rise(innerCalendar.copy().setHours(LT_Rise)),
-                        RiseSetCalculationResult.Set(innerCalendar.copy().setHours(LT_Set))
+                    RiseSetCalculationResult.Rise(innerCalendar.copy().addHours(LT_Rise)),
+                    RiseSetCalculationResult.Set(innerCalendar.copy().addHours(LT_Set))
                 )
             }
         }

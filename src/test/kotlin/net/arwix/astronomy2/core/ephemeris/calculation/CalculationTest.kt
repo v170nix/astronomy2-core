@@ -145,15 +145,15 @@ internal class CalculationTest {
             else -> null
         }
 
-        val formater = SimpleDateFormat("yyyy-MM-dd HH:mm:ss z")
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss z")
 
         assertEquals(data.riseDate != null, riseResult != null)
         assertEquals(data.setDate != null, setResult != null)
 
-        formater.timeZone = riseResult?.calendar?.timeZone ?: setResult!!.calendar.timeZone
+        formatter.timeZone = riseResult?.calendar?.timeZone ?: setResult!!.calendar.timeZone
 
-        if (riseResult != null) assertEquals(data.riseDate, formater.format(riseResult.calendar.time))
-        if (setResult != null) assertEquals(data.setDate, formater.format(setResult.calendar.time))
+        if (riseResult != null) assertEquals(data.riseDate, formatter.format(riseResult.calendar.time))
+        if (setResult != null) assertEquals(data.setDate, formatter.format(setResult.calendar.time))
     }
 
     internal data class RiseSetData(val year: Int,
@@ -175,6 +175,10 @@ internal class CalculationTest {
     }
 
     fun getRiseSetSunData() = listOf(
+        RiseSetData(
+            2020, Calendar.OCTOBER, 25, "Europe/Warsaw", 20.51, 52.51,
+            "2020-10-25 06:22:11 CET", "2020-10-25 16:21:21 CET"
+        ),
             RiseSetData(2018, Calendar.AUGUST, 7, "Europe/Moscow", 30.325, 60.0583333,
                     "2018-08-07 04:52:41 MSK", "2018-08-07 21:14:35 MSK"),
             RiseSetData(2018, Calendar.AUGUST, 7, "America/New_York", -74.0059, 40.7127,

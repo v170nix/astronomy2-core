@@ -5,16 +5,16 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URI
 
 plugins {
-    kotlin("jvm") version "1.3.61"
+    kotlin("jvm") version "1.4.10"
     id("com.github.johnrengelman.shadow") version "5.2.0"
 //    id("java")
     `maven-publish`
-    id("com.jfrog.bintray") version "1.8.4"
+    id("com.jfrog.bintray") version "1.8.5"
 }
 
 group = "net.arwix.astronomy2"
 val artifactID = "astronomy-core"
-version = "0.8.5-b"
+version = "0.8.6-b"
 
 //setProperty("targetCompatibility", JavaVersion.VERSION_1_6)
 //setProperty("sourceCompatibility", JavaVersion.VERSION_1_6)
@@ -56,7 +56,7 @@ shadowJar.apply {
 dependencies {
     implementation(kotlin("stdlib-jdk7"))
     implementation(kotlin("stdlib"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.2.0")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.2.0")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:5.2.0")
@@ -70,6 +70,9 @@ dependencies {
 tasks {
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
+    }
+    wrapper {
+        gradleVersion = "5.6.4"
     }
 
     withType(GradleBuild::class.java) {

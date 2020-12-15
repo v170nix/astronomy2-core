@@ -2,7 +2,9 @@ package net.arwix.astronomy2.core.calendar
 
 import net.arwix.astronomy2.core.JT
 import net.arwix.astronomy2.core.MJD
+import net.arwix.astronomy2.core.MJD_1970
 import net.arwix.astronomy2.core.SECS_IN_DAY
+import java.time.Instant
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -12,16 +14,59 @@ fun Calendar.getMJD(isJulianDate: Boolean = false): MJD {
             (zoneOffset() + daylight) / SECS_IN_DAY / 1000
 }
 
+fun Instant.toMJD(): MJD = epochSecond.toDouble() / SECS_IN_DAY + MJD_1970
+
+fun Instant.toJT(applyDeltaT: Boolean = false): JT {
+    return getJT(toMJD()) + if (applyDeltaT) getDeltaT(toEpochMilli()) / SECS_IN_DAY else 0.0
+}
+
+fun Instant.roundToMinute(): Instant {
+    val s = epochSecond
+    val m = s / 60L
+    val ds = s - m * 60L
+    val round = if (ds > 30L) s + 60L - ds else s - ds
+    return Instant.ofEpochSecond(round)
+}
+
+fun Instant.getDeltaT(unit: TimeUnit) = getDeltaT(toEpochMilli()) * when (unit) {
+    TimeUnit.NANOSECONDS -> 1000000000.0
+    TimeUnit.MICROSECONDS -> 1000000.0
+    TimeUnit.MILLISECONDS -> 1000.0
+    TimeUnit.SECONDS -> 1.0
+    TimeUnit.MINUTES -> 1.0 / 60.0
+    TimeUnit.HOURS -> 1.0 / 3600.0
+    TimeUnit.DAYS -> 1.0 / 86400.0
+}
+
+
+//fun ZonedDateTime.getMJD(isJulianDate: Boolean = false): MJD {
+//    val instant = this.toInstant()
+//    val daylight = zone.rules.getDaylightSavings(instant).toMillis()
+//    return getMJD(year, monthValue, dayOfMonth, hour, minute, second, 0, isJulianDate) -
+//            (zone.rules.getOffset(instant).totalSeconds * 1000 + daylight) / SECS_IN_DAY / 1000
+//}
+
 fun Calendar.getDeltaT(unit: TimeUnit): Double =
-        getDeltaT(year(), month() + 1) * when (unit) {
-            TimeUnit.NANOSECONDS -> 1000000000.0
-            TimeUnit.MICROSECONDS -> 1000000.0
-            TimeUnit.MILLISECONDS -> 1000.0
-            TimeUnit.SECONDS -> 1.0
-            TimeUnit.MINUTES -> 1.0 / 60.0
-            TimeUnit.HOURS -> 1.0 / 3600.0
-            TimeUnit.DAYS -> 1.0 / 86400.0
-        }
+    getDeltaT(year(), month() + 1) * when (unit) {
+        TimeUnit.NANOSECONDS -> 1000000000.0
+        TimeUnit.MICROSECONDS -> 1000000.0
+        TimeUnit.MILLISECONDS -> 1000.0
+        TimeUnit.SECONDS -> 1.0
+        TimeUnit.MINUTES -> 1.0 / 60.0
+        TimeUnit.HOURS -> 1.0 / 3600.0
+        TimeUnit.DAYS -> 1.0 / 86400.0
+    }
+//
+//fun ZonedDateTime.getDeltaT(unit: TimeUnit): Double =
+//    getDeltaT(year, month.value) * when (unit) {
+//        TimeUnit.NANOSECONDS -> 1000000000.0
+//        TimeUnit.MICROSECONDS -> 1000000.0
+//        TimeUnit.MILLISECONDS -> 1000.0
+//        TimeUnit.SECONDS -> 1.0
+//        TimeUnit.MINUTES -> 1.0 / 60.0
+//        TimeUnit.HOURS -> 1.0 / 3600.0
+//        TimeUnit.DAYS -> 1.0 / 86400.0
+//    }
 
 fun Calendar.copy(): Calendar = Calendar.getInstance(this.timeZone).also {
     it.timeInMillis = this.timeInMillis
@@ -33,12 +78,12 @@ fun Calendar.applyMJD(mjd: MJD, applyDeltaT: Boolean = false): Calendar {
 }
 
 fun Calendar.getJT(applyDeltaT: Boolean = false): JT =
-        getJT(getMJD() + if (applyDeltaT) getDeltaT(TimeUnit.DAYS) else 0.0)
+    getJT(getMJD() + if (applyDeltaT) getDeltaT(TimeUnit.DAYS) else 0.0)
 
 fun MJD.toCalendar(applyDeltaT: Boolean = false, timeZone: TimeZone = TimeZone.getTimeZone("UTC")): Calendar =
-        Calendar.getInstance(timeZone).apply {
-            fromMJDToCalendar(this@toCalendar, this, applyDeltaT)
-        }
+    Calendar.getInstance(timeZone).apply {
+        fromMJDToCalendar(this@toCalendar, this, applyDeltaT)
+    }
 
 fun Calendar.year() = get(Calendar.YEAR)
 fun Calendar.month() = get(Calendar.MONTH)
@@ -97,6 +142,10 @@ fun Calendar.resetTime(): Calendar {
     set(Calendar.MILLISECOND, 0)
     return this
 }
+
+//fun ZonedDateTime.resetTime(): ZonedDateTime {
+//    return with { LocalTime.of(0, 0) }
+//}
 
 fun Calendar.getHours(): Double {
     return hourOfDay() + (minute() + second() / 60.0) / 60.0

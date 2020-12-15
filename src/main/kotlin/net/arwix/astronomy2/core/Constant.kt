@@ -37,6 +37,7 @@ const val PI_OVER_SIX = Math.PI / 6.0
 // @JvmField val R_Moon = 1738.0
 
 const val MJD_J2000 = 51544.5        // MJD на эпоху J2000.0
+const val MJD_1970 = 40587.0
 const val DELTA_JD_MJD = 2400000.5
 const val T_J2000 = 0.0           // эпоха J2000.0
 const val T_B1950 = -0.500002108   // эпоха B1950

@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URI
 
 plugins {
-    kotlin("jvm") version "1.4.10"
+    kotlin("jvm") version "1.4.21"
     id("com.github.johnrengelman.shadow") version "5.2.0"
 //    id("java")
     `maven-publish`
@@ -14,7 +14,7 @@ plugins {
 
 group = "net.arwix.astronomy2"
 val artifactID = "astronomy-core"
-version = "0.8.6-b"
+version = "0.8.7-b"
 
 //setProperty("targetCompatibility", JavaVersion.VERSION_1_6)
 //setProperty("sourceCompatibility", JavaVersion.VERSION_1_6)
@@ -56,7 +56,7 @@ shadowJar.apply {
 dependencies {
     implementation(kotlin("stdlib-jdk7"))
     implementation(kotlin("stdlib"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.2.0")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.2.0")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:5.2.0")
@@ -81,6 +81,9 @@ tasks {
     withType<GenerateMavenPom> {
         //        val sh = shadowJar.get().ar
         destination = file("$buildDir/libs/${shadowJar.get().archiveName}.pom")
+    }
+    "test"(Test::class) {
+        useJUnitPlatform()
     }
 }
 

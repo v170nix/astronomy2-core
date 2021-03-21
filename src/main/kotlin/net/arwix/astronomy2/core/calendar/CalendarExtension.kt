@@ -17,7 +17,7 @@ fun Calendar.getMJD(isJulianDate: Boolean = false): MJD {
 fun Instant.toMJD(): MJD = epochSecond.toDouble() / SECS_IN_DAY + MJD_1970
 
 fun Instant.toJT(applyDeltaT: Boolean = false): JT {
-    return getJT(toMJD()) + if (applyDeltaT) getDeltaT(toEpochMilli()) / SECS_IN_DAY else 0.0
+    return getJT(toMJD() + if (applyDeltaT) getDeltaT(toEpochMilli()) / SECS_IN_DAY else 0.0)
 }
 
 fun Instant.roundToMinute(): Instant {
